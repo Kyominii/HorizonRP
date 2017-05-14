@@ -27,14 +27,14 @@ end
 
 
 
-Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
     while true do
         Wait(0)
         if IsControlJustPressed(0, 213) or IsDisabledControlJustPressed(0, 213) then
 			RadioTalk()
         end
     end
-end)
+end)]]
 
 RegisterNetEvent('pv:voip')
 AddEventHandler('pv:voip', function(voipDistance)

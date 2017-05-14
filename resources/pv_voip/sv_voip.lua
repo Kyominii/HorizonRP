@@ -1,3 +1,7 @@
+AddEventHandler("playerSpawned", function(spawn)    
+    TriggerClientEvent('pv:voip', source, 'default')
+end)
+
 TriggerEvent('es:addCommand', 'voip', function(source, args, user)
 
 	TriggerClientEvent('pv:voip', source, 'default')

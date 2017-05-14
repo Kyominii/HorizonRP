@@ -77,7 +77,7 @@ end)
 
 RegisterNetEvent('police:dropIllegalItem')
 AddEventHandler('police:dropIllegalItem', function(id)
-	TriggerEvent("player:looseItem", tonumber(id), exports.inventory:getQuantity(id))
+	TriggerEvent("player:looseItem", tonumber(id), exports.vdk_inventory:getQuantity(id))
 end)
 
 RegisterNetEvent('police:unseatme')

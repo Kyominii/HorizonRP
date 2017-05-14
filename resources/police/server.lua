@@ -38,31 +38,30 @@ function checkInventory(target)
 	local identifier = ""
     TriggerEvent("es:getPlayerFromId", target, function(player)
 		identifier = player.identifier
+		local executed_query = MySQL:executeQuery("SELECT * FROM `user_inventory` JOIN items ON items.id = user_inventory.item_id WHERE user_id = '@username'", { ['@username'] = identifier })
+		local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id', 'isIllegal' }, "item_id")
+		if (result) then
+			for _, v in ipairs(result) do
+				if(v.quantity ~= 0) then
+					strResult = strResult .. v.quantity .. " de " .. v.libelle .. ", "
+				end
+				if(v.isIllegal == "True") then
+					TriggerClientEvent('police:dropIllegalItem', target, v.item_id)
+				end
+			end
+		end
+		
+		strResult = strResult .. " / "
+		
+		local executed_query = MySQL:executeQuery("SELECT * FROM user_weapons WHERE identifier = '@username'", { ['@username'] = identifier })
+		local result = MySQL:getResults(executed_query, { 'weapon_model' }, 'identifier' )
+		if (result) then
+			for _, v in ipairs(result) do
+					strResult = strResult .. "possession de " .. v.weapon_model .. ", "
+			end
+		end
 	end)
 	
-	local executed_query = MySQL:executeQuery("SELECT * FROM `user_inventory` JOIN items ON items.id = user_inventory.item_id WHERE user_id = '@username'", { ['@username'] = identifier })
-	local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id', 'isIllegal' }, "item_id")
-	if (result) then
-		for _, v in ipairs(result) do
-			if(v.quantity ~= 0) then
-				strResult = strResult .. v.quantity .. " de " .. v.libelle .. ", "
-			end
-			if(v.isIllegal == 1) then
-				TriggerClientEvent('police:dropIllegalItem', target, v.item_id)
-			end
-		end
-	end
-	
-	strResult = strResult .. " / "
-	
-	local executed_query = MySQL:executeQuery("SELECT * FROM user_weapons WHERE identifier = '@username'", { ['@username'] = identifier })
-	local result = MySQL:getResults(executed_query, { 'weaponmodel' }, 'identifier' )
-	if (result) then
-		for _, v in ipairs(result) do
-				strResult = strResult .. "possession de " .. v.weapon_model .. ", "
-		end
-	end
-
     return strResult
 end
 
