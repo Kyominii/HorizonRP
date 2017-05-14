@@ -76,6 +76,17 @@ AddEventHandler("appt:teleport", function(apid, id)
 	ShowName(appartements[apid].appts[id].name)
 end)
 
+Citizen.CreateThread(function ()
+	Citizen.Wait(0)
+	for i = 1, #appartements do
+		appartCoords = appartements[i]
+		appartBlip = AddBlipForCoord(appartCoords.ext.x, appartCoords.ext.y, appartCoords.ext.z)
+		SetBlipSprite(appartBlip, 350)
+		SetBlipAsShortRange(appartBlip, true)
+	end
+    return
+end)
+
 Citizen.CreateThread(function()
 
 	while true do

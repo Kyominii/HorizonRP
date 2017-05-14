@@ -86,9 +86,9 @@ local blips = {
     --{name="Gang", id=437, x=960.24, y=-140.31, z=74.50},
     --{name="Gang", id=437, x=-1042.29, y=4910.17, z=94.92},
     -- appartements
-    {name="Appartement Milton Drive", id=350, x=-775.17,   y=312.01,  z=84.658},
-    {name="Appartement Richard Magestique", id=350, x=-936.49,   y=-379.42,  z=38.96},
-    {name="Appartement Del Perro", id=350, x=-1447.60,   y=-537.38,  z=34.74},
+    --{name="Appartement Milton Drive", id=350, x=-775.17,   y=312.01,  z=84.658},
+    --{name="Appartement Richard Magestique", id=350, x=-936.49,   y=-379.42,  z=38.96},
+    --{name="Appartement Del Perro", id=350, x=-1447.60,   y=-537.38,  z=34.74},
     -- Gas stations
     {name="Gas Station", id=361, x=49.4187,   y=2778.793,  z=58.043},
     {name="Gas Station", id=361, x=263.894,   y=2606.463,  z=44.983},
