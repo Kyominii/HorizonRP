@@ -6,9 +6,9 @@ RegisterServerEvent("item:updateQuantity")
 RegisterServerEvent("item:setItem")
 RegisterServerEvent("item:reset")
 RegisterServerEvent("item:sell")
-RegisterServerEvent("player:giveItem")
 
 local items = {}
+
 
 AddEventHandler("item:getItems", function()
     items = {}
@@ -46,24 +46,6 @@ AddEventHandler("item:sell", function(id, qty, price)
         MySQL:executeQuery("UPDATE user_inventory SET `quantity` = @qty WHERE `user_id` = '@username' AND `item_id` = @id", { ['@username'] = player, ['@qty'] = tonumber(qty), ['@id'] = tonumber(id) })
         user:addMoney(tonumber(price))
     end)
-end)
-
-AddEventHandler("player:giveItem", function(item, name, qty, target)
-    local player = getPlayerID(target)
-    local executed_query = MySQL:executeQuery("SELECT SUM(quantity) as total FROM user_inventory WHERE user_id = '@username'", { ['@username'] = player })
-    local result = MySQL:getResults(executed_query, { 'total' })
-	
-	local executed_query2 = MySQL:executeQuery("SELECT quantity, limitation FROM `items` JOIN user_inventory ON items.id = user_inventory.item_id WHERE user_id = '@user' AND id = '@id'", { ['@user'] = player, ['@id'] = item })
-    local result2 = MySQL:getResults(executed_query2, { 'quantity', 'limitation' })
-	
-	if(result and result2) then
-		local total = result[1].total
-		if (total + qty <= 60 and result2[1].quantity < result2[1].limitation) then
-			TriggerClientEvent("player:looseItem", source, item, qty)
-			TriggerClientEvent("player:receiveItem", target, item, qty)
-			TriggerClientEvent("es_freeroam:notify", target, "CHAR_MP_STRIPCLUB_PR", 1, "Mairie", false, "Vous venez de recevoir " .. qty .. " " .. name)
-		end
-	end
 end)
 
 -- get's the player id without having to use bugged essentials

@@ -1,5 +1,5 @@
 #!/bin/bash
-rm /home/cache/http-files/*
+rm cache/http-files/*
 
 fx_root=`dirname "$(readlink -f "$0")"`
 
