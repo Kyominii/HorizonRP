@@ -1,0 +1,79 @@
+ListenPort: 30122
+
+PreParseResources:
+    - mapmanager
+
+AutoStartResources:
+    - chat
+    - fivem-map-skater
+    - spawnmanager
+    - baseevents
+    - rconlog
+    - hardcap # prevents too many players from joining
+    - scoreboard
+    - essentialmode
+    - es_freeroam
+    - loadingscreen
+    - es_admin
+    - frfuel
+    - speedo
+    - pv_voip
+    - assets
+    - handsup
+    - banking
+    - pos
+    - neverwanted
+    - vdk_inventory
+    - chat
+    - vdk_recolt
+    - jobs-system_fr
+    - MissionText
+    - pausemenu-title
+    - ELS-FiveM
+    - sync-acl
+    - police
+    - skin_customization
+    - garages
+    - es_weashop
+    - lastpostodb
+    - paycheck_fr
+    - lscustoms
+    - pm
+    - ezWhitelist
+    - djlnotifier
+    - vehcontrol
+    - captain14lspd
+    - compass-hud
+    - emotes
+    - Interaction
+    - HospitalHeal
+    - es_holdup
+    - carwash
+    - droparme
+    - appartements
+    - es_bank
+
+# do change
+RconPassword: space031
+
+# configure this, please
+Hostname: HORIZON RP | Test serveur | discord.gg/MN4WaTg
+
+ScriptDebug: true
+
+DebugLog: true
+
+# set to false to hide from the online server list
+Announce: false
+
+# set to false to require players to be signed in to Steam
+DisableAuth: false
+
+# set to true to disable local script hook plugins
+DisableScriptHook: false
+
+# uncomment and set to the path of an icon to use in the server browser. it should be square.
+ServerIcon: hello.png
+
+# don't try enabling this
+#UseGameServerV2: true

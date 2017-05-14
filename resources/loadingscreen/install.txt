@@ -1,0 +1,76 @@
+                    ***VERSION FRANCAISE (english below)***
+
+            __________________TUTO INSTALLATION__________________
+
+1. Extraire l'archive loadingscreen.rar
+2. Dirigez-vous vers le dossier de votre serveur puis allez dans le dossier ressources
+3. Glisser le dossier loadingscreen
+4. Retourner à la racine de votre serveur puis ouvrez citmp-server.yml
+5. Puis en dessous de AutoStartResouces ajouter - loadingscreen 
+
+            _________________TUTO MODIFICATIONS__________________
+
+                     -------------index.html-------------
+
+Ligne 11 vid.volume = 0.6 // Comment modifier le volume de la musique? Remplacer le numéro 6 par un numéro entre 1 & 6.
+Ligne 22 background: url(https://i.imgur.com/XzPmrW1.jpg) center no-repeat; // remplacer https://i.imgur.com/XzPmrW1.jpg par l'url de votre image dimension de l'image 2592x1944.
+Ligne 165 <span id="name">100 max</span> // Remplacer le numéro 100 par le nombre de slots maximum de votre serveur.
+Ligne 169 <span id="steamid">Los Santos</span> // Remplacer le nom Los Santos par le nom de votre map.
+Ligne 173 <span>100% ROLEPLAY</span> // Remplacer 100% ROLEPLAY par le nom de votre mode de jeu Exemple: 100% Drift/Stunt.
+Ligne 177 <span>ts.gtav-roleplay.fr</span> // Remplacer ts.gtav-roleplay.fr par votre discord / teamspeak / site web.
+Ligne 183 / 186 / 189 / 192 / 195 / 198 / 201 / 204 / 207 / 210 <font class="rule"></font> // Ajouter les règlements Exemple: <font class="rule">ajouter votre text ici</font>
+
+                     -------------music-------------
+
+Remplacer Loading.ogg par votre musique attention des que vous avez ajouté votre musique vous devez la renommer en Loading voici un site pour convertir votre musique .mp3 en.ogg.
+Site web pour convertir votre musique .mp3 en .ogg http://audio.online-convert.com/convert-to-ogg
+
+                     -------------images-------------
+
+remplacer logo.png par votre logo attention il faut que votre logo soit renommé en logo et je vous conseille la taille 1100x120.
+
+         __________________Ce script à été développer par RDZ__________________
+        [                                                                      ]
+        [                               Youtube                                ]
+        [          www.youtube.com/channel/UC7cOssWHSyWgxnVZ3Q-2iIQ            ]
+        [                                                                      ]
+        [______________________________________________________________________]
+
+
+                            ***ENGLISH VERSION***
+
+            __________________TUTO INSTALLATION__________________
+
+1. Extract loadingscreen.rar
+2. Go to your FiveM server directory, then ressources folder.
+3. Drag here the loadingscreen folder you just extracted.
+4. Go back to your server main directory and open citmp-server.yml
+5. Under AutoStartResouces add the line - loadingscreen 
+
+            _________________TUTO MODIFICATIONS__________________
+
+                     -------------index.html-------------
+
+line 11/ vid.volume = 0.6 // This is how to change volume of your loading music. Replace "6" for a value from 1 to 6.
+line 22/ background: url(https://i.imgur.com/XzPmrW1.jpg) center no-repeat; // replace https://i.imgur.com/XzPmrW1.jpg for your image url, dimension is 2592x1944.
+line 165 <span id="name">100 max</span> // Replace the number 100 for your server's maximal slots number.
+line 169 <span id="steamid">Los Santos</span> // Replace the name Los Santos for your map name.
+line 173 <span>100% ROLEPLAY</span> // Replace 100% ROLEPLAY for your game mode. For example: 100% Drift/Stunt.
+line 177 <span>ts.gtav-roleplay.fr</span> // Replace ts.gtav-roleplay.fr for your discord / teamspeak / website...
+line 183 / 186 / 189 / 192 / 195 / 198 / 201 / 204 / 207 / 210 <font class="rule"></font> // Add rules for your server. For exemple: <font class="rule">add your text here</font>
+
+                     -------------music-------------
+
+Replace Loading.ogg for your music. Caution: as soon as you add your music, you have to rename it as "Loading". 
+Here is a wabsite to convert your .mp3 music to .ogg: http://audio.online-convert.com/convert-to-ogg
+
+                     -------------images-------------
+
+replace logo.png for your logo. Caution: It have to be renamed to "logo" and i suggest you this size: 1100x120.
+
+         _________________This script has been released by RDZ_________________
+        [                                                                      ]
+        [                               Youtube                                ]
+        [          www.youtube.com/channel/UC7cOssWHSyWgxnVZ3Q-2iIQ            ]
+        [                                                                      ]
+        [______________________________________________________________________]
