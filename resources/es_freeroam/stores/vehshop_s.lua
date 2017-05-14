@@ -60,7 +60,7 @@ AddEventHandler('BuyForVeh', function(name, vehicle, price, plate, primarycolor,
   end)
 end)
 
-TriggerEvent('es:addCommand', 'pv', function(source, user)
+--[[TriggerEvent('es:addCommand', 'pv', function(source, user)
   TriggerEvent('es:getPlayerFromId', source, function(user)
     local player = user.identifier
     local executed_query = MySQL:executeQuery("SELECT * FROM user_vehicle WHERE identifier = '@username'",{['@username'] = player})
@@ -74,4 +74,4 @@ TriggerEvent('es:addCommand', 'pv', function(source, user)
 
   	TriggerClientEvent('vehshop:spawnVehicle', source, vehicle)
   end)
-end)
+end)]]
