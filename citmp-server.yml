@@ -52,6 +52,7 @@ AutoStartResources:
     - droparme
     - appartements
     - es_bank
+    - gcidentity
 
 # do change
 RconPassword: space031

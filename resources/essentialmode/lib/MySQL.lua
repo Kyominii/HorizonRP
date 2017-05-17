@@ -15,7 +15,7 @@ function MySQL.open(self, server, database, userid, password)
 	local reflection = clr.System.Reflection
 	local assembly = reflection.Assembly.LoadFrom('resources/essentialmode/lib/MySql.Data.dll')
 	self.mysql = clr.MySql.Data.MySqlClient
-	self.connection = self.mysql.MySqlConnection("server="..server..";database="..database..";userid="..userid..";password="..password.."")
+	self.connection = self.mysql.MySqlConnection("server=".."127.0.0.1"..";database=".."gta5_gamemode_essential"..";userid=".."root"..";password=".."y48Vz72ruR0tf7F7".."")
 	self.connection.Open()
 end
 

@@ -26,15 +26,15 @@ end
 
 local stores = {
 	["paleto_twentyfourseven"] = {
-		position = { ['x'] = 1730.35949707031, ['y'] = 6416.7001953125, ['z'] = 35.0372161865234 },
+		position = { ['x'] = 1734.806, ['y'] = 6420.800, ['z'] = 35.037 },
 		reward = 1000,
-		nameofstore = "24/7 (Paleto Bay)",
+		nameofstore = "Paleto Bay",
 		lastrobbed = 0
 	},
 	["sandyshores_twentyfoursever"] = {
-		position = { ['x'] = 1960.4197998047, ['y'] = 3742.9755859375, ['z'] = 32.343738555908 },
+		position = { ['x'] = 1959.242, ['y'] = 3748.822, ['z'] = 32.344 },
 		reward = 1000,
-		nameofstore = "24/7 (Sandy Shores)",
+		nameofstore = "Sandy Shores",
 		lastrobbed = 0
 	},
 	["bar_one"] = {
@@ -46,19 +46,19 @@ local stores = {
 	["groove_street"] = {
 		position = { ['x'] = -43.0, ['y'] = -1748.700, ['z'] = 28.80 },
 		reward = 5000,
-		nameofstore = "Groove street (a coter de armurerie)",
+		nameofstore = "Groove Street",
 		lastrobbed = 0
 	},
 	["clinton_avenue"] = {
 		position = { ['x'] = 378.110, ['y'] = 333.063, ['z'] = 102.60 },
 		reward = 5000,
-		nameofstore = "Bowl (Pres du casino)",
+		nameofstore = "Bowl (Près du casino)",
 		lastrobbed = 0
 	},
 	["littleseoul_twentyfourseven"] = {
 		position = { ['x'] = -709.17022705078, ['y'] = -904.21722412109, ['z'] = 19.215591430664 },
 		reward = 5000,
-		nameofstore = "24/7 (Little Seoul)",
+		nameofstore = "Little Seoul",
 		lastrobbed = 0
 	}
 }
@@ -73,7 +73,7 @@ end)
 RegisterNetEvent('es_holdup:toofarlocal')
 AddEventHandler('es_holdup:toofarlocal', function(robb)
 	holdingup = false
-	TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Le braquage est annuler, tu as recu kedal.")
+	TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Le braquage est annulé, tu n'as rien reçu.")
 	robbingName = ""
 	secondsRemaining = 0
 	incircle = false
@@ -83,7 +83,7 @@ end)
 RegisterNetEvent('es_holdup:robberycomplete')
 AddEventHandler('es_holdup:robberycomplete', function(robb)
 	holdingup = false
-	TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Braquage reussi, tu as recu: ^2" .. stores[store].reward)
+	TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Braquage réussi, tu as reçu: ^2" .. stores[store].reward)
 	store = ""
 	secondsRemaining = 0
 	incircle = false
@@ -111,7 +111,7 @@ Citizen.CreateThread(function()
 		SetBlipScale(blip, 0.8)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Braquage de magasins")
+		AddTextComponentString("Magasins")
 		EndTextCommandSetBlipName(blip)
 	end
 end)
@@ -130,7 +130,7 @@ Citizen.CreateThread(function()
 					
 					if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 1.0)then
 						if (incircle == false) then
-							DisplayHelpText("Appuyez sur ~INPUT_CONTEXT~ pour braquer ~b~" .. v.nameofstore .. "~w~ Attention, la police sera alerte!")
+							DisplayHelpText("Appuyez sur ~INPUT_CONTEXT~ pour braquer ~b~" .. v.nameofstore .. "~w~ Attention, la police sera alertée!")
 						end
 						incircle = true
 						if(IsControlJustReleased(1, 51))then

@@ -49,10 +49,7 @@ end)
 AddEventHandler('playerDropped', function(reason)
 	if(Users[source])then
 		TriggerEvent("es:playerDropped", Users[source])
-		if(reason ~= "Timed out") then
-			MySQL:executeQuery("UPDATE users SET `money`='@value' WHERE identifier = '@identifier'",
-			{['@value'] = 0, ['@identifier'] = Users[source].identifier})
-		end
+		MySQL:executeQuery("UPDATE users SET `money`='@value' WHERE identifier = '@identifier'", {['@value'] = Users[source].money, ['@identifier'] = Users[source].identifier})
 
 		Users[source] = nil
 	end

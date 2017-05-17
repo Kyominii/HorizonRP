@@ -45,7 +45,7 @@ local menupolice = {
 			title = "INTERACTION CITOYEN",
 			name = "Citoyen",
 			buttons = {
-				{name = "Carte d'identité(SOON)", description = ''},
+				{name = "Carte d'identité", description = ''},
 				{name = "Fouiller", description = ''},
 				{name = "(De)Menotter", description = ''},
 				{name = "Mettre dans le véhicule", description = ''},
@@ -126,6 +126,8 @@ function ButtonSelectedPolice(button)
 			PutInVehicle()
 		elseif btn == "Faire sortir du véhicule" then
 			UnseatVehicle()
+		elseif btn == "Carte d'identité" then
+			CheckId()
 		end
 	elseif this == "Véhicule" then
 		if btn == "Crocheter le véhicule"then
@@ -218,7 +220,7 @@ end
 ------------FONCTION INTERACTION CITOYEN---------
 -------------------------------------------------
 function Fouiller()
-	t, distance = GetClosestPlayer()
+	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:targetCheckInventory", GetPlayerServerId(t))
 	else
@@ -226,8 +228,17 @@ function Fouiller()
 	end
 end
 
+function CheckId()
+	local t , distance  = GetClosestPlayer()
+    if(distance ~= -1 and distance < 3) then
+		TriggerServerEvent('gc:copOpenIdentity', GetPlayerServerId(t))
+    else
+		TriggerEvent('chatMessage', 'GOVERNMENT', {255, 0, 0}, "No player near you !")
+	end
+end
+
 function Cuffed()
-	t, distance = GetClosestPlayer()
+	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:cuffGranted", GetPlayerServerId(t))
 	else
@@ -236,7 +247,7 @@ function Cuffed()
 end
 
 function PutInVehicle()
-	t, distance = GetClosestPlayer()
+	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		local v = GetVehiclePedIsIn(GetPlayerPed(-1), true)
 		TriggerServerEvent("police:forceEnterAsk", GetPlayerServerId(t), v)
@@ -246,7 +257,7 @@ function PutInVehicle()
 end
 
 function UnseatVehicle()
-	t, distance = GetClosestPlayer()
+	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:confirmUnseat", GetPlayerServerId(t))
 	else
@@ -255,7 +266,7 @@ function UnseatVehicle()
 end
 
 function Fines(amount)
-	t, distance = GetClosestPlayer()
+	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:finesGranted", GetPlayerServerId(t), amount)
 	else
