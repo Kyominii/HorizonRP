@@ -13,7 +13,7 @@ settings.defaultSettings = {
 	['pvpEnabled'] = true,
 	['permissionDenied'] = false,
 	['debugInformation'] = false,
-	['startingCash'] = 100,
+	['startingCash'] = 5000,
 	['enableRankDecorators'] = false,
 	['moneyIcon'] = "$"
 }

@@ -1,59 +1,24 @@
+emotes = {
+		["/sit"] = { cmd = '/sit', event = 'playSitEmote' },
+		["/chair"] = { cmd = '/chair', event = 'playChairEmote' },
+		["/kneel"] = { cmd = '/kneel', event = 'playKneelEmote' },
+		["/notepad"] = { cmd = '/notepad', event = 'playNotepadEmote' },
+		["/photo"] = { cmd = '/photo', event = 'playPhotoEmote' },
+		["/lean"] = { cmd = '/lean', event = 'playLeanEmote' },
+		["/smoke"] = { cmd = '/smoke', event = 'playSmokeEmote' },
+		["/drink"] = { cmd = '/drink', event = 'playDrinkEmote' },
+		["/cancelemote"] = { cmd = '/cancelemote', event = 'playCancelEmote' }
+}
+--[["/cop"] = { cmd = '/cop', event = 'playCopEmote' },
+["/medic"] = { cmd = '/medic', event = 'playMedicEmote' },
+["/traffic"] = { cmd = '/traffic', event = 'playTrafficEmote' },
+["/clipboard"] = { cmd = '/clipboard', event = 'playClipboardEmote' },]]
 AddEventHandler('chatMessage', function(source, name, msg)
-	sm = stringsplit(msg, " ");
-	if sm[1] == "/emotes" then
+	if msg == "/emote" then
 		CancelEvent();
 		TriggerClientEvent('printEmoteList', source);
-	elseif sm[1] == "/emote" then
+	elseif emotes[msg].cmd ~= nil then
 		CancelEvent();
-		if sm[2] == nil or sm[2] == "" then
-			TriggerClientEvent('printInvalidEmote', source);
-		elseif sm[2] == "cop" then
-			TriggerClientEvent('playCopEmote', source);
-		elseif sm[2] == "sit" then
-			TriggerClientEvent('playSitEmote', source);
-		elseif sm[2] == "chair" then
-			TriggerClientEvent('playChairEmote', source);
-		elseif sm[2] == "kneel" then
-			TriggerClientEvent('playKneelEmote', source);
-		elseif sm[2] == "medic" then
-			TriggerClientEvent('playMedicEmote', source);
-		elseif sm[2] == "notepad" then
-			TriggerClientEvent('playNotepadEmote', source);
-		elseif sm[2] == "traffic" then
-			TriggerClientEvent('playTrafficEmote', source);
-		elseif sm[2] == "photo" then
-			TriggerClientEvent('playPhotoEmote', source);
-		elseif sm[2] == "clipboard" then
-			TriggerClientEvent('playClipboardEmote', source);
-		elseif sm[2] == "lean" then
-			TriggerClientEvent('playLeanEmote', source);
-		elseif sm[2] == "smoke" then
-			TriggerClientEvent('playSmokeEmote', source);
-		elseif sm[2] == "yoga" then
-			TriggerClientEvent('playYogaEmote', source);
-		elseif sm[2] == "drink" then
-			TriggerClientEvent('playDrinkEmote', source);
-		end
+		TriggerClientEvent(emotes[msg].event, source);
 	end
 end)
-
-function stringsplit(self, delimiter)
-	local a = self:Split(delimiter)
-	local t = {}
-	
-	for i = 0, #a - 1 do
-		table.insert(t, a[i])
-	end
-	
-	return t
-end
-
-function tablelength(T)
-	local count = 0
-	for _ in pairs(T) do count = count + 1 end
-	return count
-end
-
-function setContains(set, key)
-    return set[key] ~= nil
-end

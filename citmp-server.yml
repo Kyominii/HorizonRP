@@ -1,4 +1,4 @@
-ListenPort: 30122
+ListenPort: 30120
 
 PreParseResources:
     - mapmanager
@@ -45,7 +45,6 @@ AutoStartResources:
     - captain14lspd
     - compass-hud
     - emotes
-    - Interaction
     - HospitalHeal
     - es_holdup
     - carwash

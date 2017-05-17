@@ -1,11 +1,3 @@
-AddEventHandler('playerSpawn', function()
-	TriggerClientEvent('showNotification', -1,"~g~".. GetPlayerName(source).."~w~ à rejoint.")
-end)
-
-AddEventHandler('playerDropped', function()
-	TriggerClientEvent('showNotification', -1,"~r~".. GetPlayerName(source).."~w~ est parti.")
-end)
-
 RegisterServerEvent('playerDied')
 AddEventHandler('playerDied',function(killer,reason)
 	if killer == "**Invalid**" then --Can't figure out what's generating invalid, it's late. If you figure it out, let me know. I just handle it as a string for now.
