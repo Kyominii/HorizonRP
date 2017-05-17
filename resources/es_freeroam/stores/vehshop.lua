@@ -2,7 +2,7 @@
 
 RegisterNetEvent('FinishMoneyCheckForVeh')
 RegisterNetEvent('vehshop:spawnVehicle')
-
+RegisterNetEvent('vehshop:sendPlate')
 
 
 --[[Local/Global]]--
@@ -389,6 +389,9 @@ function OpenCreator()
 	vehshop.selectedbutton = 0
 end
 
+local plateIsValid = false
+local plate = ""
+
 function CloseCreator(name, veh, price)
 	Citizen.CreateThread(function()
 		local ped = LocalPed()
@@ -425,8 +428,12 @@ function CloseCreator(name, veh, price)
 				SetVehicleMod(personalvehicle,i,mod)
 			end
 			SetVehicleOnGroundProperly(personalvehicle)
-			local originalPlate = GetVehicleNumberPlateText(personalvehicle)
-			local plate = "HOR"..originalPlate:sub(4)
+			plate = GetVehicleNumberPlateText(personalvehicle)
+			TriggerServerEvent('CheckPlateExisting', plate)
+			while(plateIsValid == false) do
+				Wait(0)
+			end
+			plateIsValid = false
 			SetVehicleNumberPlateText(personalvehicle, plate)
 			SetVehicleHasBeenOwnedByPlayer(personalvehicle,true)
 			local id = NetworkGetNetworkIdFromEntity(personalvehicle)
@@ -447,6 +454,11 @@ function CloseCreator(name, veh, price)
 		vehshop.menu.to = 10
 	end)
 end
+
+AddEventHandler('vehshop:sendPlate', function(p)	
+	plate = p
+	plateIsValid = true
+end)
 
 function drawMenuButton(button,x,y,selected)
 	local menu = vehshop.menu
