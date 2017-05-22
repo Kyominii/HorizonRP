@@ -7,7 +7,8 @@ local changeYourJob = {
 local jobs = {
   {name="Boulanger", id=5},
   {name="Vigneron", id=3},
-  {name="Mineur", id=4}
+  {name="Mineur", id=4},
+  {name="Secouriste", id=11}
 }
 
 ---------------------------------- FUNCTIONS ----------------------------------

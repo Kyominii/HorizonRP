@@ -503,7 +503,7 @@ local backlock = false
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		if IsControlJustPressed(1,166) and menupolice.opened == true then
+		if (IsControlJustPressed(1,166) and menupolice.opened == true) then
 				CloseMenuPolice()
 		end
 		if menupolice.opened then

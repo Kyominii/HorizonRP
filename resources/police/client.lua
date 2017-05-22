@@ -267,6 +267,8 @@ function ServiceOff()
 	blipsCops = {}
 end
 
+local menuOpened = false;
+
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -279,8 +281,14 @@ Citizen.CreateThread(function()
 				end
 			end
 			if(isInService) then
-				if IsControlJustPressed(1,166) then 
-					OpenPoliceMenu()
+				if (IsControlJustPressed(1,166)) then
+					if(menuOpened == false) then
+						OpenPoliceMenu()
+						menuOpened = true
+					elseif(menuOpened == true) then
+						CloseMenuPolice()
+						menuOpened = false
+					end
 				end
 			end
 			
@@ -375,5 +383,18 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
+		SetPlayerWantedLevel(PlayerId(), 0, false)
+		SetPlayerWantedLevelNow(PlayerId(), false)
+		ClearAreaOfCops()
+		SetPoliceIgnorePlayer(PlayerId(), true)
+		SetDispatchCopsForPlayer(PlayerId(), false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 1, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 2, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 3, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 5, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 8, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 9, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 10, false)
+		Citizen.InvokeNative(0xDC0F817884CDD856, 11, false)
     end
 end)

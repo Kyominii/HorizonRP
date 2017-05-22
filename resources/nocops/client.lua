@@ -1,0 +1,18 @@
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(100)
+        ClearAreaOfCops()
+        SetPoliceIgnorePlayer(PlayerId(), true)
+        SetDispatchCopsForPlayer(PlayerId(), false)
+		EnableDispatchService(1, false)
+		EnableDispatchService(2, false)
+		EnableDispatchService(3, false)
+		EnableDispatchService(5, false)
+		EnableDispatchService(8, false)
+		EnableDispatchService(9, false)
+		EnableDispatchService(10, false)
+		EnableDispatchService(11, false)
+        SetPlayerWantedLevel(PlayerId(), 0, false)
+        SetPlayerWantedLevelNow(PlayerId(), false)
+    end
+end)

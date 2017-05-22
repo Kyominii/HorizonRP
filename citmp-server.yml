@@ -22,7 +22,6 @@ AutoStartResources:
     - handsup
     - banking
     - pos
-    - neverwanted
     - vdk_inventory
     - chat
     - vdk_recolt
@@ -52,6 +51,8 @@ AutoStartResources:
     - appartements
     - es_bank
     - gcidentity
+    - emergency
+    
 
 # do change
 RconPassword: space031

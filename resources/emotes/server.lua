@@ -13,12 +13,3 @@ emotes = {
 ["/medic"] = { cmd = '/medic', event = 'playMedicEmote' },
 ["/traffic"] = { cmd = '/traffic', event = 'playTrafficEmote' },
 ["/clipboard"] = { cmd = '/clipboard', event = 'playClipboardEmote' },]]
-AddEventHandler('chatMessage', function(source, name, msg)
-	if msg == "/emote" then
-		CancelEvent();
-		TriggerClientEvent('printEmoteList', source);
-	elseif emotes[msg].cmd ~= nil then
-		CancelEvent();
-		TriggerClientEvent(emotes[msg].event, source);
-	end
-end)
