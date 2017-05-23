@@ -25,7 +25,7 @@ AutoStartResources:
     - vdk_inventory
     - chat
     - vdk_recolt
-    - jobs-system_fr
+    - jobs-system
     - MissionText
     - pausemenu-title
     - ELS-FiveM

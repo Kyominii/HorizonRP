@@ -146,8 +146,8 @@ AddEventHandler('es_em:sendEmergencyToDocs',
 
 					local notifReceivedAt = GetGameTimer()
 
-					SendNotification(txt[lang]['emergency'] .. reason)
-					SendNotification(txt[lang]['takeCall'])
+					Notify(txt[lang]['emergency'] .. reason)
+					Notify(txt[lang]['takeCall'])
 
 					while not controlPressed do
 						Citizen.Wait(0)
@@ -156,7 +156,7 @@ AddEventHandler('es_em:sendEmergencyToDocs',
 						if (GetTimeDifference(GetGameTimer(), notifReceivedAt) > 15000) then
 							notificationInProgress = false
 							controlPressed = true
-							SendNotification(txt[lang]['callExpires'])
+							Notify(txt[lang]['callExpires'])
 						end
 
 						if IsControlPressed(1, Keys["Y"]) then
@@ -180,7 +180,7 @@ AddEventHandler('es_em:callTaken',
 		local playerServerId = GetPlayerServerId(PlayerId())
 
 		if isInService and jobId == 11 and not playerInComaIsADoc then
-			SendNotification(txt[lang]['callTaken'] .. playerName .. '~s~')
+			Notify(txt[lang]['callTaken'] .. playerName .. '~s~')
 		end
 
 		if playerServerId == playerID then
@@ -232,7 +232,7 @@ function StartEmergency(x, y, z, sourcePlayerInComa)
 	SetBlipSprite(BLIP_EMERGENCY, 2)
 	SetNewWaypoint(x, y)
 
-	SendNotification(txt[lang]['gps'])
+	Notify(txt[lang]['gps'])
 
 	Citizen.CreateThread(
 		function()
@@ -260,16 +260,16 @@ function GetService()
 	local playerPed = GetPlayerPed(-1)
 
 	if jobId ~= 11 then
-		SendNotification(txt[lang]['notDoc'])
+		Notify(txt[lang]['notDoc'])
 		return
 	end
 
 	if isInService then
-		SendNotification(txt[lang]['stopService'])
+		Notify(txt[lang]['stopService'])
 		TriggerServerEvent("skin_customization:SpawnPlayer")
 		TriggerServerEvent('es_em:sv_setService', 0)
 	else
-		SendNotification(txt[lang]['startService'])
+		Notify(txt[lang]['startService'])
 		TriggerServerEvent('es_em:sv_setService', 1)
 	end
 
@@ -303,10 +303,10 @@ function DisplayHelpText(str)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
-function SendNotification(message)
+function Notify(text)
 	SetNotificationTextEntry("STRING")
-	AddTextComponentString(message)
-	DrawNotification(false, false)
+	AddTextComponentString(text)
+	DrawNotification(0,1)
 end
 
 function GetClosestPlayer()
