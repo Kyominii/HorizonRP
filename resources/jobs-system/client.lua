@@ -23,7 +23,7 @@ local jobmenu = {
         {title = "Boulanger", name = "Boulanger", id = 5},
         {title = "Vigneron", name = "Vigneron", id = 3},
         {title = "Mineur", name = "Mineur", id = 4},
-		{title = "Secouriste", name = "Secouriste", id = 11},
+		--{title = "Secouriste", name = "Secouriste", id = 11},
         -- EXAMPLE : {title = "Name Job", name = "Name Short", id = ID in base SQL},
       }
     },
