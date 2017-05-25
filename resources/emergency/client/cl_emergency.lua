@@ -281,6 +281,7 @@ function GetService()
 		SetPedComponentVariation(playerPed, 4, 9, 3, 2)
 		SetPedComponentVariation(playerPed, 3, 92, 0, 2)
 		SetPedComponentVariation(playerPed, 6, 25, 0, 2)
+		GiveWeaponToPed(playerPed, GetHashKey("WEAPON_STUNGUN"), true, true)
 	else
 
 		SetPedComponentVariation(playerPed, 11, 86, 0, 2)
@@ -288,6 +289,7 @@ function GetService()
 		SetPedComponentVariation(playerPed, 4, 37, 2, 2)
 		SetPedComponentVariation(playerPed, 3, 98, 0, 2)
 		SetPedComponentVariation(playerPed, 6, 29, 0, 2)
+		GiveWeaponToPed(playerPed, GetHashKey("WEAPON_STUNGUN"), true, true)
 	end
 end
 
