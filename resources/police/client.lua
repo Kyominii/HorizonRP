@@ -127,6 +127,10 @@ AddEventHandler('es_em:cl_ResPlayer', function()
 	if(isCop and isInService) then
 		ServiceOff()
 	end
+	
+	if(handCuffed == true)
+		handCuffed = false
+	end
 end)
 
 function enableCopBlips()
@@ -360,6 +364,7 @@ Citizen.CreateThread(function()
 					if(IsPlayerDead(PlayerId())) then
 						if(alreadyDead == false) then
 							ServiceOff()
+							handCuffed = false
 							alreadyDead = true
 						end
 					else
