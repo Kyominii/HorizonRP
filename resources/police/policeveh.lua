@@ -363,7 +363,7 @@ Citizen.CreateThread(function()
 										drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
 
 									end
-									local veh = CreateVehicle(hash,plyCoords["x"], plyCoords["y"], plyCoords["z"],90.0,false,false)
+									local veh = CreateVehicle(hash,452.115, -1018.106, 28.478,90.0,false,false)
 									while not DoesEntityExist(veh) do
 										Citizen.Wait(0)
 										drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
