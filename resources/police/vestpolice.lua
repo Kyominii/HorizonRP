@@ -36,6 +36,7 @@ local vestpolice = {
 			buttons = {
 				{name = "Prendre le service (uniforme)", description = ""},
 				{name = "Prendre le service (BAC)", description = ""},
+				{name = "Prendre le service (intervention)", description = ""},
 				{name = "Gilet par balle", description = ""},
 				{name = "Enlever le Gilet par balle", description = ""},
 				{name = "Gilet jaune", description = ""},
@@ -56,12 +57,20 @@ function ButtonSelectedVest(button)
 	local btn = button.name
 	if this == "main" then
 		if btn == "Prendre le service (uniforme)" then
-			ServiceOn()                                                 -- En Service + Uniforme
+			ServiceOn()
+			removeUniforme()
+			Wait(500)
 			giveUniforme()
 			drawNotification("Vous êtes maintenant ~g~En service")
 			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
 		elseif btn == "Prendre le service (BAC)" then
 			ServiceOn()
+			removeUniforme()
+			drawNotification("Vous êtes maintenant ~g~En service")
+			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
+		elseif btn == "Prendre le service (intervention)" then
+			ServiceOn()
+			giveInterventionUniforme()
 			drawNotification("Vous êtes maintenant ~g~En service")
 			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
 		elseif btn == "Fin de service" then
@@ -147,6 +156,30 @@ function giveUniforme()
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_STUNGUN"), true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_NIGHTSTICK"), true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_PUMPSHOTGUN"), 150, true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_FLASHLIGHT"), true, true)
+	end)
+end
+
+function giveInterventionUniforme()
+	Citizen.CreateThread(function()
+		
+		local model = GetHashKey("s_m_y_swat_01")
+
+		RequestModel(model)
+		while not HasModelLoaded(model) do
+			RequestModel(model)
+			Citizen.Wait(0)
+		end
+	 
+		SetPlayerModel(PlayerId(), model)
+		SetModelAsNoLongerNeeded(model)
+		
+		RemoveAllPedWeapons(GetPlayerPed(-1), true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_PISTOL50"), 150, true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_ASSAULTRIFLE"), 150, true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_STUNGUN"), true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_NIGHTSTICK"), true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_ASSAULTSHOTGUN"), 150, true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_Flashlight"), true, true)
 	end)
 end
