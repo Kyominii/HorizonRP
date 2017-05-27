@@ -19,7 +19,7 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local lang = 'en'
+local lang = 'fr'
 
 local txt = {
   ['fr'] = {
@@ -194,6 +194,7 @@ function ResPlayer()
 	TriggerServerEvent('es_em:sv_removeMoney')
 	TriggerServerEvent("item:reset")
 	TriggerServerEvent("skin_customization:SpawnPlayer")
+	TriggerEvent("es_em:cl_ResPlayer")
 	RemoveAllPedWeapons(GetPlayerPed(-1),true)
 	NetworkResurrectLocalPlayer(357.757, -597.202, 28.6314, true, true, false)
 end

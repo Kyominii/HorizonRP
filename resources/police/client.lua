@@ -112,6 +112,13 @@ AddEventHandler('police:resultAllCopsInService', function(array)
 	enableCopBlips()
 end)
 
+RegisterNetEvent('es_em:cl_ResPlayer')
+AddEventHandler('es_em:cl_ResPlayer', function()
+	if(isCop and isInService) then
+		ServiceOff()
+	end
+end)
+
 function enableCopBlips()
 
 	for k, existingBlip in pairs(blipsCops) do
@@ -340,14 +347,15 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         if(isCop) then
 			if(isInService) then
-			
-				if(IsPlayerDead(PlayerId())) then
-					if(alreadyDead == false) then
-						ServiceOff()
-						alreadyDead = true
+				if(config.useModifiedEmergency ~= true) then
+					if(IsPlayerDead(PlayerId())) then
+						if(alreadyDead == false) then
+							ServiceOff()
+							alreadyDead = true
+						end
+					else
+						alreadyDead = false
 					end
-				else
-					alreadyDead = false
 				end
 			
 				DrawMarker(1,449.113,-981.084,42.691,0,0,0,0,0,0,2.0,2.0,2.0,0,155,255,200,0,0,0,0)
