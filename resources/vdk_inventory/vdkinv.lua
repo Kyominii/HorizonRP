@@ -161,7 +161,7 @@ function PlayerIsDead()
     if playerdead then
         return
     end
-    TriggerServerEvent("item:reset")
+    --TriggerServerEvent("item:reset")
 end
 
 function getPlayers()

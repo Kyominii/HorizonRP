@@ -181,13 +181,6 @@ AddEventHandler('es:updatePositions', function(x, y, z)
 	end
 end)
 
-RegisterServerEvent('es:death')
-AddEventHandler('es:death', function()
-	TriggerEvent('es:getPlayerFromId', source, function(user)
-		user:setMoney((0))
-	end)
-end)
-
 -- Info command
 commands['info'] = {}
 commands['info'].perm = 0

@@ -92,10 +92,23 @@ AddEventHandler("weaponshop:GiveWeaponsToPlayer", function(player)
 	end)
 end)
 
-AddEventHandler("es:death", function()
-	TriggerEvent('es:getPlayerFromId', source, function(user)
-		local playerID = user.identifier
-		local executed_query = MySQL:executeQuery("DELETE FROM user_weapons WHERE identifier = '@username'",{['@username'] = playerID})
-		TriggerClientEvent("weaponshop:looseWeapons", source)
-	end)
+RegisterServerEvent("weaponshop:loseWeapons")
+AddEventHandler("weaponshop:loseWeapons", function()
+	local playerID = getPlayerID(source)
+	local executed_query = MySQL:executeQuery("DELETE FROM user_weapons WHERE identifier = '@username'",{['@username'] = playerID})
 end)
+
+-- get's the player id without having to use bugged essentials
+function getPlayerID(source)
+    local identifiers = GetPlayerIdentifiers(source)
+    local player = getIdentifiant(identifiers)
+    return player
+end
+
+-- gets the actual player id unique to the player,
+-- independent of whether the player changes their screen name
+function getIdentifiant(id)
+    for _, v in ipairs(id) do
+        return v
+    end
+end
