@@ -316,106 +316,108 @@ end
 -------------------------------------------------
 ----------------FONCTION OPEN MENU---------------
 -------------------------------------------------
-local backlock = false
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		if GetDistanceBetweenCoords(452.115, -1018.106, 28.478,GetEntityCoords(GetPlayerPed(-1))) > 5 then
-			if policeveh.opened then
-				CloseVeh()
+if(config.useNativePoliceGarage == true) then
+	local backlock = false
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(0)
+			if GetDistanceBetweenCoords(452.115, -1018.106, 28.478,GetEntityCoords(GetPlayerPed(-1))) > 5 then
+				if policeveh.opened then
+					CloseVeh()
+				end
 			end
-		end
-		if policeveh.opened then
-			local ped = LocalPed()
-			local menu = policeveh.menu[policeveh.currentmenu]
-			drawTxt(policeveh.title,1,1,policeveh.menu.x,policeveh.menu.y,1.0, 255,255,255,255)
-			drawMenuTitle(menu.title, policeveh.menu.x,policeveh.menu.y + 0.08)
-			drawTxt(policeveh.selectedbutton.."/"..tablelength(menu.buttons),0,0,policeveh.menu.x + policeveh.menu.width/2 - 0.0385,policeveh.menu.y + 0.067,0.4, 255,255,255,255)
-			local y = policeveh.menu.y + 0.12
-			buttoncount = tablelength(menu.buttons)
-			local selected = false
+			if policeveh.opened then
+				local ped = LocalPed()
+				local menu = policeveh.menu[policeveh.currentmenu]
+				drawTxt(policeveh.title,1,1,policeveh.menu.x,policeveh.menu.y,1.0, 255,255,255,255)
+				drawMenuTitle(menu.title, policeveh.menu.x,policeveh.menu.y + 0.08)
+				drawTxt(policeveh.selectedbutton.."/"..tablelength(menu.buttons),0,0,policeveh.menu.x + policeveh.menu.width/2 - 0.0385,policeveh.menu.y + 0.067,0.4, 255,255,255,255)
+				local y = policeveh.menu.y + 0.12
+				buttoncount = tablelength(menu.buttons)
+				local selected = false
 
-			for i,button in pairs(menu.buttons) do
-				if i >= policeveh.menu.from and i <= policeveh.menu.to then
+				for i,button in pairs(menu.buttons) do
+					if i >= policeveh.menu.from and i <= policeveh.menu.to then
 
-					if i == policeveh.selectedbutton then
-						selected = true
-					else
-						selected = false
-					end
-					drawMenuButton(button,policeveh.menu.x,y,selected)
-					--if button.distance ~= nil then
-						--drawMenuRight(button.distance.."m",policeveh.menu.x,y,selected)
-					--end
-					y = y + 0.04
-					if policeveh.currentmenu == "main" then
-						if selected then
-								if fakecar.model ~= button.model then
-									if DoesEntityExist(fakecar.car) then
-										Citizen.InvokeNative(0xEA386986E786A54F, Citizen.PointerValueIntInitialized(fakecar.car))
-									end
-									local ped = LocalPed()
-									local plyCoords = GetEntityCoords(ped, 0)
-									local hash = GetHashKey(button.model)
-									RequestModel(hash)
-									while not HasModelLoaded(hash) do
-										Citizen.Wait(0)
-										drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
+						if i == policeveh.selectedbutton then
+							selected = true
+						else
+							selected = false
+						end
+						drawMenuButton(button,policeveh.menu.x,y,selected)
+						--if button.distance ~= nil then
+							--drawMenuRight(button.distance.."m",policeveh.menu.x,y,selected)
+						--end
+						y = y + 0.04
+						if policeveh.currentmenu == "main" then
+							if selected then
+									if fakecar.model ~= button.model then
+										if DoesEntityExist(fakecar.car) then
+											Citizen.InvokeNative(0xEA386986E786A54F, Citizen.PointerValueIntInitialized(fakecar.car))
+										end
+										local ped = LocalPed()
+										local plyCoords = GetEntityCoords(ped, 0)
+										local hash = GetHashKey(button.model)
+										RequestModel(hash)
+										while not HasModelLoaded(hash) do
+											Citizen.Wait(0)
+											drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
 
+										end
+										local veh = CreateVehicle(hash,452.115, -1018.106, 28.478,90.0,false,false)
+										while not DoesEntityExist(veh) do
+											Citizen.Wait(0)
+											drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
+										end
+										FreezeEntityPosition(veh,true)
+										SetEntityInvincible(veh,true)
+										SetVehicleDoorsLocked(veh,4)
+										--SetEntityCollision(veh,false,false)
+										TaskWarpPedIntoVehicle(LocalPed(),veh,-1)
+										for i = 0,24 do
+											SetVehicleModKit(veh,0)
+											RemoveVehicleMod(veh,i)
+										end
+										fakecar = { model = button.model, car = veh}
 									end
-									local veh = CreateVehicle(hash,452.115, -1018.106, 28.478,90.0,false,false)
-									while not DoesEntityExist(veh) do
-										Citizen.Wait(0)
-										drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
-									end
-									FreezeEntityPosition(veh,true)
-									SetEntityInvincible(veh,true)
-									SetVehicleDoorsLocked(veh,4)
-									--SetEntityCollision(veh,false,false)
-									TaskWarpPedIntoVehicle(LocalPed(),veh,-1)
-									for i = 0,24 do
-										SetVehicleModKit(veh,0)
-										RemoveVehicleMod(veh,i)
-									end
-									fakecar = { model = button.model, car = veh}
-								end
+							end
+						end
+						if selected and IsControlJustPressed(1,201) then
+							ButtonSelected(button)
 						end
 					end
-					if selected and IsControlJustPressed(1,201) then
-						ButtonSelected(button)
+				end
+			end
+			if policeveh.opened then
+				if IsControlJustPressed(1,202) then
+					Back()
+				end
+				if IsControlJustReleased(1,202) then
+					backlock = false
+				end
+				if IsControlJustPressed(1,188) then
+					if policeveh.selectedbutton > 1 then
+						policeveh.selectedbutton = policeveh.selectedbutton -1
+						if buttoncount > 10 and policeveh.selectedbutton < policeveh.menu.from then
+							policeveh.menu.from = policeveh.menu.from -1
+							policeveh.menu.to = policeveh.menu.to - 1
+						end
+					end
+				end
+				if IsControlJustPressed(1,187)then
+					if policeveh.selectedbutton < buttoncount then
+						policeveh.selectedbutton = policeveh.selectedbutton +1
+						if buttoncount > 10 and policeveh.selectedbutton > policeveh.menu.to then
+							policeveh.menu.to = policeveh.menu.to + 1
+							policeveh.menu.from = policeveh.menu.from + 1
+						end
 					end
 				end
 			end
-		end
-		if policeveh.opened then
-			if IsControlJustPressed(1,202) then
-				Back()
-			end
-			if IsControlJustReleased(1,202) then
-				backlock = false
-			end
-			if IsControlJustPressed(1,188) then
-				if policeveh.selectedbutton > 1 then
-					policeveh.selectedbutton = policeveh.selectedbutton -1
-					if buttoncount > 10 and policeveh.selectedbutton < policeveh.menu.from then
-						policeveh.menu.from = policeveh.menu.from -1
-						policeveh.menu.to = policeveh.menu.to - 1
-					end
-				end
-			end
-			if IsControlJustPressed(1,187)then
-				if policeveh.selectedbutton < buttoncount then
-					policeveh.selectedbutton = policeveh.selectedbutton +1
-					if buttoncount > 10 and policeveh.selectedbutton > policeveh.menu.to then
-						policeveh.menu.to = policeveh.menu.to + 1
-						policeveh.menu.from = policeveh.menu.from + 1
-					end
-				end
-			end
-		end
 
-	end
-end)
+		end
+	end)
+end
 ---------------------------------------------------
 ------------------EVENT SPAWN VEH------------------
 ---------------------------------------------------

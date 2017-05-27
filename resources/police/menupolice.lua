@@ -1,6 +1,24 @@
 -----------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------MENU POLICE--------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
+local buttonsCitizen = {}
+if(config.useGcIdentity == true) then
+	buttonsCitizen[1] = {name = "Carte d'identité", description = ''}
+end
+if(config.useVDKInventory == true) then
+	buttonsCitizen[#buttonsCitizen+1] = {name = "Fouiller", description = ''}
+end
+buttonsCitizen[#buttonsCitizen+1] = {name = "(De)Menotter", description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = "Mettre dans le véhicule", description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = "Faire sortir du véhicule", description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = "Amendes", description = ''}
+
+local buttonsVehicle = {}
+if(config.enableCheckPlate == true) then
+	buttonsVehicle[1] = {name = "Plaque d'immatriculation", description = ''}
+end
+buttonsVehicle[#buttonsVehicle+1] = {name = "Crocheter le véhicule", description = ''}
+
 local menupolice = {
 	opened = false,
 	title = "Menu Police",
@@ -35,7 +53,7 @@ local menupolice = {
 			title = "ANIMATIONS",
 			name = "Animations",
 			buttons = {
-				{name = "Faire la circulation", description = ''},  -- Trouvez + d'animation police
+				{name = "Faire la circulation", description = ''},
 				{name = "Prendre des notes", description = ''},
 				{name = "Stand By", description = ''},
 				{name = "Stand By 2", description = ''},
@@ -44,14 +62,7 @@ local menupolice = {
 		["Citoyen"] = {
 			title = "INTERACTION CITOYEN",
 			name = "Citoyen",
-			buttons = {
-				{name = "Carte d'identité", description = ''},
-				{name = "Fouiller", description = ''},
-				{name = "(De)Menotter", description = ''},
-				{name = "Mettre dans le véhicule", description = ''},
-				{name = "Faire sortir du véhicule", description = ''},
-				{name = "Amendes", description = ''},
-			}
+			buttons = buttonsCitizen
 		},
 		["Amendes"] = {
 			title = "AMENDES",

@@ -1,4 +1,8 @@
-local isCop = false
+if(config.useCopWhitelist == true) then
+	isCop = false
+else
+	isCop = true
+end
 local isInService = false
 local rank = "inconnu"
 local checkpoints = {}
@@ -8,14 +12,14 @@ local isAlreadyDead = false
 local allServiceCops = {}
 local blipsCops = {}
 
-local takingService = {
+takingService = {
   --{x=850.156677246094, y=-1283.92004394531, z=28.0047378540039},
   {x=457.956909179688, y=-992.72314453125, z=30.6895866394043}
   --{x=1856.91320800781, y=3689.50073242188, z=34.2670783996582},
   --{x=-450.063201904297, y=6016.5751953125, z=31.7163734436035}
 }
 
-local stationGarage = {
+stationGarage = {
 	{x=452.115966796875, y=-1018.10681152344, z=28.4786586761475}
 }
 
@@ -26,7 +30,9 @@ end)
 RegisterNetEvent('police:receiveIsCop')
 AddEventHandler('police:receiveIsCop', function(result)
 	if(result == "inconnu") then
-		isCop = false
+		if(config.useCopWhitelist == true) then
+			isCop = false
+		end
 	else
 		isCop = true
 		rank = result
@@ -40,7 +46,9 @@ end)
 
 RegisterNetEvent('police:noLongerCop')
 AddEventHandler('police:noLongerCop', function()
-	isCop = false
+	if(config.useCopWhitelist == true) then
+		isCop = false
+	end
 	isInService = false
 	
 	local playerPed = GetPlayerPed(-1)
@@ -59,7 +67,7 @@ end)
 
 RegisterNetEvent('police:getArrested')
 AddEventHandler('police:getArrested', function()
-	if(isCop == false) then
+	if((isCop == false and config.useCopWhitelist == true) or config.useCopWhitelist == false) then
 		handCuffed = not handCuffed
 		if(handCuffed) then
 			TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "You are now cuff.")
@@ -109,7 +117,9 @@ end)
 RegisterNetEvent('police:resultAllCopsInService')
 AddEventHandler('police:resultAllCopsInService', function(array)
 	allServiceCops = array
-	enableCopBlips()
+	if(config.enableOtherCopsBlips == true) then
+		enableCopBlips()
+	end
 end)
 
 RegisterNetEvent('es_em:cl_ResPlayer')
@@ -164,7 +174,6 @@ function enableCopBlips()
 				Citizen.InvokeNative( 0x5FBCA48327B914DF, blip, true )
 			end
 			
-			Citizen.Trace("Name : "..GetPlayerName(id))
 			SetBlipNameToPlayerName( blip, id )
 			SetBlipScale( blip,  0.85 )
 			SetBlipAlpha( blip, 255 )
@@ -347,7 +356,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         if(isCop) then
 			if(isInService) then
-				if(config.useModifiedEmergency ~= true) then
+				if(config.useModifiedEmergency == false) then
 					if(IsPlayerDead(PlayerId())) then
 						if(alreadyDead == false) then
 							ServiceOff()
