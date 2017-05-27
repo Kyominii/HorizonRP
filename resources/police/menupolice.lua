@@ -77,16 +77,7 @@ local menupolice = {
 				{name = "$6000", description = ''},
 				{name = "$8000", description = ''},
 				{name = "$10000", description = ''},
-				{name = "$11000", description = ''},
-				{name = "$15000", description = ''},
-				{name = "$25000", description = ''},
-				{name = "$30000", description = ''},
-				{name = "$35000", description = ''},
-				{name = "$40000", description = ''},
-				{name = "$45000", description = ''},
-				{name = "$50000", description = ''},
-				{name = "$60000", description = ''},
-				{name = "$80000", description = ''},
+				{name = "Autre montant", description = ''},
 			}
 		},
 		["Véhicule"] = {
@@ -165,26 +156,8 @@ function ButtonSelectedPolice(button)
 			Fines(8000)
 		elseif btn == "$10000" then
 			Fines(10000)
-		elseif btn == "$11000" then
-			Fines(11000)
-		elseif btn == "$15000" then
-			Fines(15000)
-		elseif btn == "$25000" then
-			Fines(25000)
-		elseif btn == "$30000" then
-			Fines(30000)
-		elseif btn == "$35000" then
-			Fines(35000)
-		elseif btn == "$40000" then
-			Fines(40000)
-		elseif btn == "$45000" then
-			Fines(45000)
-		elseif btn == "$50000" then
-			Fines(50000)
-		elseif btn == "$60000" then
-			Fines(60000)
-		elseif btn == "$80000" then
-			Fines(80000)
+		elseif btn == "Autre montant" then
+			Fines(-1)
 		end
 	end
 end
@@ -279,7 +252,23 @@ end
 function Fines(amount)
 	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
-		TriggerServerEvent("police:finesGranted", GetPlayerServerId(t), amount)
+		if(amount == -1) then
+			DisplayOnscreenKeyboard(1, "FMMC_KEY_TIP8S", "", "", "", "", "", 20)
+			while (UpdateOnscreenKeyboard() == 0) do
+				DisableAllControlActions(0);
+				Wait(0);
+			end
+			if (GetOnscreenKeyboardResult()) then
+				local res = tonumber(GetOnscreenKeyboardResult())
+				if(res ~= nil and res ~= 0) then
+					amount = res				
+				end
+			end
+		end
+		
+		if(amount ~= -1) then
+			TriggerServerEvent("police:finesGranted", GetPlayerServerId(t), amount)
+		end
 	else
 		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
 	end

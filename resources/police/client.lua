@@ -399,6 +399,7 @@ Citizen.CreateThread(function()
 							existingVeh = CreateVehicle(car, plyCoords["x"], plyCoords["y"], plyCoords["z"], 90.0, true, false)
 							local id = NetworkGetNetworkIdFromEntity(existingVeh)
 							SetNetworkIdCanMigrate(id, true)
+							SetVehicleLivery(existingVeh, 0)
 							TaskWarpPedIntoVehicle(ply, existingVeh, -1)
 						end
 					end
