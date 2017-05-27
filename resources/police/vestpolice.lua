@@ -2,8 +2,8 @@
 ----------------------------------------------------VESTIAIRE POLICE---------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 local buttonsVest = {}
-buttonsVest[1] = {name = "Uniforme de Police", description = ""}
-buttonsVest[#buttonsVest+1] = {name = "Enlever l'uniforme", description = ""}
+buttonsVest[1] = {name = "Prendre le service (uniforme)", description = ""}
+buttonsVest[#buttonsVest+1] = {name = "Fin de service", description = ""}
 if(config.enableOutfits == true) then
 	buttonsVest[#buttonsVest+1] = {name = "Gilet par balle", description = ""}
 	buttonsVest[#buttonsVest+1] = {name = "Enlever le Gilet par balle", description = ""}
@@ -34,12 +34,13 @@ local vestpolice = {
 			title = "CATEGORIES",
 			name = "main",
 			buttons = {
-				{name = "Uniforme de Police", description = ""},
-				{name = "Enlever l'uniforme", description = ""},
+				{name = "Prendre le service (uniforme)", description = ""},
+				{name = "Prendre le service (BAC)", description = ""},
 				{name = "Gilet par balle", description = ""},
 				{name = "Enlever le Gilet par balle", description = ""},
 				{name = "Gilet jaune", description = ""},
 				{name = "Enlever le Gilet jaune", description = ""},
+				{name = "Fin de service", description = ""},
 			}
 		},
 	}
@@ -54,12 +55,16 @@ function ButtonSelectedVest(button)
 	local this = vestpolice.currentmenu
 	local btn = button.name
 	if this == "main" then
-		if btn == "Uniforme de Police" then
+		if btn == "Prendre le service (uniforme)" then
 			ServiceOn()                                                 -- En Service + Uniforme
 			giveUniforme()
 			drawNotification("Vous êtes maintenant ~g~En service")
 			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
-		elseif btn == "Enlever l'uniforme" then
+		elseif btn == "Prendre le service (BAC)" then
+			ServiceOn()
+			drawNotification("Vous êtes maintenant ~g~En service")
+			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
+		elseif btn == "Fin de service" then
 			ServiceOff()
 			removeUniforme()                                            --Finir Service + Enleve Uniforme
 			drawNotification("Vous avez ~r~terminé votre service")
@@ -70,10 +75,12 @@ function ButtonSelectedVest(button)
 				else
 					SetPedComponentVariation(GetPlayerPed(-1), 9, 6, 1, 2)
 				end
+				SetPedArmour(GetPlayerPed(-1), 100)
 			end)
 		elseif btn == "Enlever le Gilet par balle" then
 			Citizen.CreateThread(function()
 				SetPedComponentVariation(GetPlayerPed(-1), 9, 0, 1, 2)  --Remove Gilet par balle
+				SetPedArmour(GetPlayerPed(-1), 0)
 			end)
 		elseif btn == "Gilet jaune" then
 			Citizen.CreateThread(function()
@@ -141,6 +148,26 @@ function giveUniforme()
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_NIGHTSTICK"), true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_PUMPSHOTGUN"), 150, true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_Flashlight"), true, true)
+	end)
+end
+
+function removeUniforme()
+	Citizen.CreateThread(function()
+		if(config.enableOutfits == true) then
+			RemoveAllPedWeapons(GetPlayerPed(-1))
+			TriggerServerEvent("skin_customization:SpawnPlayer")
+		else
+			local model = GetHashKey("a_m_y_mexthug_01")
+
+			RequestModel(model)
+			while not HasModelLoaded(model) do
+				RequestModel(model)
+				Citizen.Wait(0)
+			end
+		 
+			SetPlayerModel(PlayerId(), model)
+			SetModelAsNoLongerNeeded(model)
+		end
 	end)
 end
 
