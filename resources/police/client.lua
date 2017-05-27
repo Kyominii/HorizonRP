@@ -128,7 +128,7 @@ AddEventHandler('es_em:cl_ResPlayer', function()
 		ServiceOff()
 	end
 	
-	if(handCuffed == true)
+	if(handCuffed == true) then
 		handCuffed = false
 	end
 end)

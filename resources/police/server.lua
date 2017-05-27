@@ -4,7 +4,10 @@ MySQL:open("localhost", "gta5_gamemode_essential", "root", "space031")
 local inServiceCops = {}
 
 function addCop(identifier)
-	MySQL:executeQuery("INSERT INTO police (`identifier`) VALUES ('@identifier')", { ['@identifier'] = identifier})
+	local result = s_checkIsCop(identifier)
+	if(result == "nil") then
+		MySQL:executeQuery("INSERT INTO police (`identifier`) VALUES ('@identifier')", { ['@identifier'] = identifier})
+	end
 end
 
 function remCop(identifier)
@@ -35,32 +38,29 @@ end
 
 function checkInventory(target)
 	local strResult = GetPlayerName(target).." own : "
-	local identifier = ""
-    TriggerEvent("es:getPlayerFromId", target, function(player)
-		identifier = player.identifier
-		local executed_query = MySQL:executeQuery("SELECT * FROM `user_inventory` JOIN items ON items.id = user_inventory.item_id WHERE user_id = '@username'", { ['@username'] = identifier })
-		local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id', 'isIllegal' }, "item_id")
-		if (result) then
-			for _, v in ipairs(result) do
-				if(v.quantity ~= 0) then
-					strResult = strResult .. v.quantity .. " de " .. v.libelle .. ", "
-				end
-				if(v.isIllegal == "True") then
-					TriggerClientEvent('police:dropIllegalItem', target, v.item_id)
-				end
+	local identifier = getPlayerID(target)
+	local executed_query = MySQL:executeQuery("SELECT * FROM `user_inventory` JOIN items ON items.id = user_inventory.item_id WHERE user_id = '@username'", { ['@username'] = identifier })
+	local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id', 'isIllegal' }, "item_id")
+	if (result) then
+		for _, v in ipairs(result) do
+			if(v.quantity ~= 0) then
+				strResult = strResult .. v.quantity .. " de " .. v.libelle .. ", "
+			end
+			if(v.isIllegal == "True") then
+				TriggerClientEvent('police:dropIllegalItem', target, v.item_id)
 			end
 		end
-		
-		strResult = strResult .. " / "
-		
-		local executed_query = MySQL:executeQuery("SELECT * FROM user_weapons WHERE identifier = '@username'", { ['@username'] = identifier })
-		local result = MySQL:getResults(executed_query, { 'weapon_model' }, 'identifier' )
-		if (result) then
-			for _, v in ipairs(result) do
-					strResult = strResult .. "possession de " .. v.weapon_model .. ", "
-			end
+	end
+	
+	strResult = strResult .. " / "
+	
+	local executed_query = MySQL:executeQuery("SELECT * FROM user_weapons WHERE identifier = '@username'", { ['@username'] = identifier })
+	local result = MySQL:getResults(executed_query, { 'weapon_model' }, 'identifier' )
+	if (result) then
+		for _, v in ipairs(result) do
+				strResult = strResult .. "possession de " .. v.weapon_model .. ", "
 		end
-	end)
+		end
 	
     return strResult
 end
@@ -84,10 +84,8 @@ end)
 
 RegisterServerEvent('police:checkIsCop')
 AddEventHandler('police:checkIsCop', function()
-	TriggerEvent("es:getPlayerFromId", source, function(user)
-		local identifier = user.identifier
-		checkIsCop(identifier)
-	end)
+	local identifier = getPlayerID(source)
+	checkIsCop(identifier)
 end)
 
 RegisterServerEvent('police:takeService')
@@ -166,12 +164,8 @@ end)
 -----------------------------------------------------------------------
 RegisterServerEvent('CheckPoliceVeh')
 AddEventHandler('CheckPoliceVeh', function(vehicle)
-	TriggerEvent('es:getPlayerFromId', source, function(user)
-
-			TriggerClientEvent('FinishPoliceCheckForVeh',source)
-			-- Spawn police vehicle
-			TriggerClientEvent('policeveh:spawnVehicle', source, vehicle)
-	end)
+	TriggerClientEvent('FinishPoliceCheckForVeh',source)
+	TriggerClientEvent('policeveh:spawnVehicle', source, vehicle)
 end)
 
 -----------------------------------------------------------------------
@@ -183,12 +177,10 @@ TriggerEvent('es:addGroupCommand', 'copadd', "admin", function(source, args, use
 	else
 		if(GetPlayerName(tonumber(args[2])) ~= nil)then
 			local player = tonumber(args[2])
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-				addCop(target.identifier)
-				TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "Roger that !")
-				TriggerClientEvent("es_freeroam:notify", player, "CHAR_ANDREAS", 1, "Government", false, "Congrats, you're now a cop !~w~.")
-				TriggerClientEvent('police:nowCop', player)
-			end)
+			addCop(getPlayerID(player))
+			TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "Roger that !")
+			TriggerClientEvent("es_freeroam:notify", player, "CHAR_ANDREAS", 1, "Government", false, "Congrats, you're now a cop !~w~.")
+			TriggerClientEvent('police:nowCop', player)
 		else
 			TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "No player with this ID !")
 		end
@@ -203,13 +195,10 @@ TriggerEvent('es:addGroupCommand', 'coprem', "admin", function(source, args, use
 	else
 		if(GetPlayerName(tonumber(args[2])) ~= nil)then
 			local player = tonumber(args[2])
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-				remCop(target.identifier)
-				TriggerClientEvent("es_freeroam:notify", player, "CHAR_ANDREAS", 1, "Government", false, "You're no longer a cop !~w~.")
-				TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "Roger that !")
-				--TriggerClientEvent('chatMessage', player, 'GOVERNMENT', {255, 0, 0}, "You're no longer a cop !")
-				TriggerClientEvent('police:noLongerCop', player)
-			end)
+			remCop(getPlayerID(player))
+			TriggerClientEvent("es_freeroam:notify", player, "CHAR_ANDREAS", 1, "Government", false, "You're no longer a cop !~w~.")
+			TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "Roger that !")
+			TriggerClientEvent('police:noLongerCop', player)
 		else
 			TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "No player with this ID !")
 		end
@@ -217,3 +206,18 @@ TriggerEvent('es:addGroupCommand', 'coprem', "admin", function(source, args, use
 end, function(source, args, user) 
 	TriggerClientEvent('chatMessage', source, 'GOVERNMENT', {255, 0, 0}, "Vous n'avez pas la permission de faire ça !")
 end)
+
+-- get's the player id without having to use bugged essentials
+function getPlayerID(source)
+    local identifiers = GetPlayerIdentifiers(source)
+    local player = getIdentifiant(identifiers)
+    return player
+end
+
+-- gets the actual player id unique to the player,
+-- independent of whether the player changes their screen name
+function getIdentifiant(id)
+    for _, v in ipairs(id) do
+        return v
+    end
+end
