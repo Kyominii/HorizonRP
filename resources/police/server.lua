@@ -123,22 +123,22 @@ AddEventHandler('police:checkingPlate', function(plate)
 	local result = MySQL:getResults(executed_query, { 'username' }, "identifier")
 	if (result[1]) then
 		for _, v in ipairs(result) do
-			TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, "Le véhicule #"..plate.." appartient à " .. v.username)
+			TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, "Le véhicule #"..plate.." appartient à " .. v.username)
 		end
 	else
-		TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, "Le véhicule #"..plate.." n'est pas enregistré !")
+		TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, "Le véhicule #"..plate.." n'est pas enregistré !")
 	end
 end)
 
 RegisterServerEvent('police:confirmUnseat')
 AddEventHandler('police:confirmUnseat', function(t)
-	TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, GetPlayerName(t).. " est sortie !")
+	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, GetPlayerName(t).. " est sortie !")
 	TriggerClientEvent('police:unseatme', t)
 end)
 
 RegisterServerEvent('police:targetCheckInventory')
 AddEventHandler('police:targetCheckInventory', function(t)
-	TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, checkInventory(t))
+	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, checkInventory(t))
 end)
 
 RegisterServerEvent('police:finesGranted')
@@ -162,13 +162,13 @@ end)
 
 RegisterServerEvent('police:cuffGranted')
 AddEventHandler('police:cuffGranted', function(t)
-	TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, "Tentative de mettre les menottes à "..GetPlayerName(t))
+	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, "Tentative de mettre les menottes à "..GetPlayerName(t))
 	TriggerClientEvent('police:getArrested', t)
 end)
 
 RegisterServerEvent('police:forceEnterAsk')
 AddEventHandler('police:forceEnterAsk', function(t, v)
-	TriggerClientEvent('chatMessage', source, 'Gouvernement', {255, 0, 0}, " Tentative de faire rentrer "..GetPlayerName(t).." dans la voiture")
+	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, "Tentative de faire rentrer "..GetPlayerName(t).." dans la voiture")
 	TriggerClientEvent('police:forcedEnteringVeh', t, v)
 end)
 
