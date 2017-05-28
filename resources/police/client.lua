@@ -12,6 +12,18 @@ local isAlreadyDead = false
 local allServiceCops = {}
 local blipsCops = {}
 
+local Keys = {
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
+	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
+	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
+	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
+	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
+	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
+	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
+}
+
 takingService = {
   --{x=850.156677246094, y=-1283.92004394531, z=28.0047378540039},
   {x=457.956909179688, y=-992.72314453125, z=30.6895866394043}
@@ -77,10 +89,56 @@ AddEventHandler('police:getArrested', function()
 	end
 end)
 
+local lockAskingFine = false
+
 RegisterNetEvent('police:payFines')
-AddEventHandler('police:payFines', function(amount)
-	TriggerServerEvent('bank:withdrawAmende', amount)
-	TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "You paid a $"..amount.." fine.")
+AddEventHandler('police:payFines', function(amount, sender)
+	Citizen.CreateThread(function()
+		
+		if(lockAskingFine ~= true) then
+			lockAskingFine = true
+			local notifReceivedAt = GetGameTimer()
+			Notification("Appuyez sur ~g~Y~s~ pour accepter l\'amende de $"..amount..", appuyez sur ~r~N~s~ pour la refuser !")
+			while(true) do
+				Wait(0)
+				
+				if (GetTimeDifference(GetGameTimer(), notifReceivedAt) > 15000) then
+					TriggerServerEvent('police:finesETA', sender, 2)
+					Notification("La demande de l'amende à ~r~expirée~s~ !")
+					lockAskingFine = false
+					break
+				end
+				
+				if IsControlPressed(1, Keys["Y"]) then
+					TriggerServerEvent('bank:withdrawAmende', amount)
+					Notification("Vous avez payé l'amende de $"..amount..".")
+					TriggerServerEvent('police:finesETA', sender, 0)
+					lockAskingFine = false
+					break
+				end
+				
+				if IsControlPressed(1, Keys["N"]) then
+					TriggerServerEvent('police:finesETA', sender, 3)
+					lockAskingFine = false
+					break
+				end
+			end
+		else
+			TriggerServerEvent('police:finesETA', sender, 1)
+		end
+	end)
+end)
+
+-- From es_freeroam
+RegisterNetEvent("police:notify")
+AddEventHandler("police:notify", function(icon, type, sender, title, text)
+    Citizen.CreateThread(function()
+		Wait(1)
+		SetNotificationTextEntry("STRING");
+		AddTextComponentString(text);
+		SetNotificationMessage(icon, icon, true, type, sender, title, text);
+		DrawNotification(false, true);
+    end)
 end)
 
 RegisterNetEvent('police:dropIllegalItem')
@@ -132,6 +190,12 @@ AddEventHandler('es_em:cl_ResPlayer', function()
 		handCuffed = false
 	end
 end)
+
+function Notification(msg)
+	SetNotificationTextEntry("STRING")
+	AddTextComponentString(msg)
+	DrawNotification(0,1)
+end
 
 function enableCopBlips()
 
@@ -208,14 +272,14 @@ function GetClosestPlayer()
 	
 	for index,value in ipairs(players) do
 		local target = GetPlayerPed(value)
-		if(target ~= ply) then
+		--if(target ~= ply) then
 			local targetCoords = GetEntityCoords(GetPlayerPed(value), 0)
 			local distance = GetDistanceBetweenCoords(targetCoords["x"], targetCoords["y"], targetCoords["z"], plyCoords["x"], plyCoords["y"], plyCoords["z"], true)
 			if(closestDistance == -1 or closestDistance > distance) then
 				closestPlayer = value
 				closestDistance = distance
 			end
-		end
+		--end
 	end
 	
 	return closestPlayer, closestDistance

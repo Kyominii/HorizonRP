@@ -136,7 +136,6 @@ AddEventHandler('es_em:sendEmergencyToDocs',
 		Citizen.CreateThread(
 			function()
 			
-				Citizen.Trace(reason ..jobId)
 				if isInService and jobId == 11 and not playerInComaIsADoc then
 					local controlPressed = false
 
