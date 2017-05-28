@@ -50,18 +50,3 @@ AddEventHandler("es_freeroam:notify", function(icon, type, sender, title, text)
 		DrawNotification(false, true);
     end)
 end)
-
-Citizen.CreateThread(function()
-	local alreadyDead = false
-	while true do
-		Wait(0)
-		if(IsPlayerDead(PlayerId())) then
-			if(alreadyDead == false) then
-				TriggerServerEvent("es:death")
-				alreadyDead = true
-			end
-		else
-			alreadyDead = false
-		end
-	end
-end)
