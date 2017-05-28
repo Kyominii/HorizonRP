@@ -14,10 +14,10 @@ AddEventHandler("item:getItems", function()
     items = {}
     local player = getPlayerID(source)
     local executed_query = MySQL:executeQuery("SELECT * FROM user_inventory JOIN items ON `user_inventory`.`item_id` = `items`.`id` WHERE user_id = '@username'", { ['@username'] = player })
-    local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id' }, "item_id")
+    local result = MySQL:getResults(executed_query, { 'quantity', 'libelle', 'item_id', 'value', 'type' }, "item_id")
     if (result) then
         for _, v in ipairs(result) do
-            t = { ["quantity"] = v.quantity, ["libelle"] = v.libelle }
+            t = { ["quantity"] = v.quantity, ["libelle"] = v.libelle, ["value"] = v.value , ["type"] = v.type }
             table.insert(items, tonumber(v.item_id), t)
         end
     end

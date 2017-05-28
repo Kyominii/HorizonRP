@@ -118,7 +118,9 @@ end
 function ItemMenu(itemId)
     ClearMenu()
     MenuTitle = "Details:"
+	Menu.addButton("Utiliser", "use", itemId)
     Menu.addButton("Donner", "give", itemId)
+	Menu.addButton("Supprimer", "removeitem", itemId)
 end
 
 function give(item)
@@ -138,6 +140,55 @@ function give(item)
 			end
         end
     end
+end
+
+function removeitem(item)
+    if (ITEMS[item].quantity - 1 >= 0) then
+        TriggerEvent("player:looseItem", item, 1)
+    end
+end
+
+function use(item)
+    if (ITEMS[item].quantity - 1 >= 0) then
+        -- Nice var swap for nothing
+        TriggerEvent("player:looseItem", item, 1)
+        -- Calling the Hunger/Thirst
+        if ITEMS[item].type == 2 then
+            TriggerEvent("food:eat", ITEMS[item])
+        elseif ITEMS[item].type == 1 then
+            TriggerEvent("food:drink", ITEMS[item])
+        else
+            -- Any other type? Drugs??????
+            Toxicated()
+            Citizen.Wait(7000)
+            ClearPedTasks(GetPlayerPed(-1))
+            Reality()
+        end
+    end
+end
+
+function Toxicated()
+	Citizen.Wait(5000)
+	DoScreenFadeOut(1000)
+	Citizen.Wait(1000)
+	ClearPedTasksImmediately(GetPlayerPed(-1))
+	SetTimecycleModifier("spectator5")
+	SetPedMotionBlur(GetPlayerPed(-1), true)
+	SetPedMovementClipset(GetPlayerPed(-1), "MOVE_M@DRUNK@SLIGHTLYDRUNK", true)
+	SetPedIsDrunk(GetPlayerPed(-1), true)
+	DoScreenFadeIn(1000)
+end
+
+function Reality()
+    Citizen.Wait(50000)
+    DoScreenFadeOut(1000)
+    Citizen.Wait(1000)
+    DoScreenFadeIn(1000)
+    ClearTimecycleModifier()
+    ResetScenarioTypesEnabled()
+    ResetPedMovementClipset(GetPlayerPed(-1), 0)
+    SetPedIsDrunk(GetPlayerPed(-1), false)
+    SetPedMotionBlur(GetPlayerPed(-1), false)
 end
 
 Citizen.CreateThread(function()
