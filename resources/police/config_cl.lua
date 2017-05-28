@@ -1,7 +1,7 @@
 config = {
 	useModifiedEmergency = true,
 	enableOtherCopsBlips = true,
-	useCopWhitelist = false,
+	useCopWhitelist = true,
 	useNativePoliceGarage = true,
 	useVDKInventory = true,
 	useGcIdentity = true,

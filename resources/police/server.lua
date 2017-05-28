@@ -1,5 +1,5 @@
 require "resources/essentialmode/lib/MySQL"
-MySQL:open("localhost", "gta5_gamemode_essential", "root", "space031")
+MySQL:open("localhost", "gta5_gamemode_essential", "root", "mdp")
 
 local inServiceCops = {}
 
