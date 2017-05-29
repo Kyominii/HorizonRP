@@ -112,7 +112,7 @@ function Menu.renderTitle()
 		local screen_w = 0
 		local screen_h = 0
 		screen_w, screen_h =  GetScreenResolution(0, 0)
-		boxColor = {0,0,0,128}
+		boxColor = {20,30,10,255}
 		SetTextFont(0)
 		SetTextScale(0.0,0.35)
 		SetTextColour(255, 255, 255, 255)
@@ -131,9 +131,9 @@ function Menu.renderButtons()
 		local screen_w = 0
 		local screen_h = 0
 		screen_w, screen_h =  GetScreenResolution(0, 0)
-		boxColor = {128,128,128,128}
+		boxColor = {42,63,17,255}
 		if(settings["active"]) then
-			boxColor = {38,38,38,255}
+			boxColor = {107,158,44,255}
 		end
 		SetTextFont(0)
 		SetTextScale(0.0,0.35)
