@@ -53,6 +53,7 @@ AutoStartResources:
     - emergency
     - foodhud
     - gb_foodshops
+    - esx_phone
     
 
 # do change
