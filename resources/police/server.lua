@@ -136,6 +136,12 @@ AddEventHandler('police:confirmUnseat', function(t)
 	TriggerClientEvent('police:unseatme', t)
 end)
 
+RegisterServerEvent('police:dragRequest')
+AddEventHandler('police:dragRequest', function(t)
+	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, GetPlayerName(t).. " est sortie !")
+	TriggerClientEvent('police:toggleDrag', t, source)
+end)
+
 RegisterServerEvent('police:targetCheckInventory')
 AddEventHandler('police:targetCheckInventory', function(t)
 	TriggerClientEvent("police:notify", source, "CHAR_ANDREAS", 1, "Gouvernement", false, checkInventory(t))

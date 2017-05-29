@@ -11,6 +11,7 @@ end
 buttonsCitizen[#buttonsCitizen+1] = {name = "(De)Menotter", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Mettre dans le véhicule", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Faire sortir du véhicule", description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = "Escorter le joueur", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Amendes", description = ''}
 
 local buttonsVehicle = {}
@@ -128,6 +129,8 @@ function ButtonSelectedPolice(button)
 			PutInVehicle()
 		elseif btn == "Faire sortir du véhicule" then
 			UnseatVehicle()
+		elseif btn == "Escorter le joueur" then
+			DragPlayer()
 		elseif btn == "Carte d'identité" then
 			CheckId()
 		end
@@ -244,6 +247,15 @@ function UnseatVehicle()
 	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:confirmUnseat", GetPlayerServerId(t))
+	else
+		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
+	end
+end
+
+function DragPlayer()
+	local t, distance = GetClosestPlayer()
+	if(distance ~= -1 and distance < 3) then
+		TriggerServerEvent("police:dragRequest", GetPlayerServerId(t))
 	else
 		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
 	end

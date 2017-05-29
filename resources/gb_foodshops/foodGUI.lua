@@ -177,7 +177,7 @@ function ShopMenu()
 		Menu.addButton("Sandwich","buymenu","Sandwich")
 	else
 		Menu.addTitle("MENU")
-		Menu.addButton("Coca","buymenu",{10, 1, 150})
+		Menu.addButton("Pepsi","buymenu",{17, 1, 150})
 		Menu.addButton("Sandwich","buymenu",{16, 1, 200})
 --		Menu.addButton("FoodName","buymenu",{ itemId, qty, price}) -- itemId = id de l'item vdk (Table : items), qty = quantité et price = prix
 	end

@@ -2,7 +2,7 @@ ITEMS = {}
 -- flag to keep track of whether player died to prevent
 -- multiple runs of player dead code
 local playerdead = false
-local maxCapacity = 60
+local maxCapacity = 64
 
 -- register events, only needs to be done once
 RegisterNetEvent("item:reset")

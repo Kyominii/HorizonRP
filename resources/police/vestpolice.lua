@@ -58,14 +58,17 @@ function ButtonSelectedVest(button)
 	if this == "main" then
 		if btn == "Prendre le service (uniforme)" then
 			ServiceOn()
-			removeUniforme()
-			Wait(500)
 			giveUniforme()
 			drawNotification("Vous êtes maintenant ~g~En service")
 			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
 		elseif btn == "Prendre le service (BAC)" then
 			ServiceOn()
-			removeUniforme()
+			
+			RemoveAllPedWeapons(GetPlayerPed(-1), true)
+			GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_COMBATPISTOL"), 150, true, true)
+			GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_STUNGUN"), true, true)
+			GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_FLASHLIGHT"), true, true)
+			
 			drawNotification("Vous êtes maintenant ~g~En service")
 			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
 		elseif btn == "Prendre le service (intervention)" then
@@ -176,11 +179,12 @@ function giveInterventionUniforme()
 		
 		RemoveAllPedWeapons(GetPlayerPed(-1), true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_PISTOL50"), 150, true, true)
-		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_ASSAULTRIFLE"), 150, true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_STUNGUN"), true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_NIGHTSTICK"), true, true)
 		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_ASSAULTSHOTGUN"), 150, true, true)
-		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_Flashlight"), true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_ASSAULTSMG"), 150, true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_HEAVYSNIPER"), 150, true, true)
+		GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_FLASHLIGHT"), true, true)
 	end)
 end
 

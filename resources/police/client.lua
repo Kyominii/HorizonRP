@@ -11,6 +11,8 @@ local handCuffed = false
 local isAlreadyDead = false
 local allServiceCops = {}
 local blipsCops = {}
+local drag = false
+local officerDrag = -1
 
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -85,6 +87,7 @@ AddEventHandler('police:getArrested', function()
 			TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "You are now cuff.")
 		else
 			TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Freedom !")
+			drag = false
 		end
 	end
 end)
@@ -155,6 +158,14 @@ AddEventHandler('police:unseatme', function(t)
 	local ynew = plyPos.y+2
    
 	SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
+end)
+
+RegisterNetEvent('police:toggleDrag')
+AddEventHandler('police:toggleDrag', function(t)
+	if(handCuffed) then
+		drag = not drag
+		officerDrag = t
+	end
 end)
 
 RegisterNetEvent('police:forcedEnteringVeh')
@@ -405,11 +416,19 @@ Citizen.CreateThread(function()
 				Citizen.Wait(0)
 			  end
 
-			  local myPed = PlayerPedId()
+			  local myPed = PlayerPedId(-1)
 			  local animation = 'idle'
 			  local flags = 16
 
 			  TaskPlayAnim(myPed, 'mp_arresting', animation, 8.0, -8, -1, flags, 0, 0, 0, 0)
+			end
+			
+			if drag then
+				local ped = GetPlayerPed(GetPlayerFromServerId(officerDrag))
+				local myped = GetPlayerPed(-1)
+				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			else
+				DetachEntity(GetPlayerPed(-1), true, false)		
 			end
 		end
     end

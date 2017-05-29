@@ -41,7 +41,6 @@ AutoStartResources:
     - ezWhitelist
     - djlnotifier
     - vehcontrol
-    - captain14lspd
     - compass-hud
     - emotes
     - HospitalHeal
