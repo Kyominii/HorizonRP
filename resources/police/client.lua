@@ -486,7 +486,7 @@ Citizen.CreateThread(function()
 			if drag then
 				local ped = GetPlayerPed(GetPlayerFromServerId(officerDrag))
 				local myped = GetPlayerPed(-1)
-				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+				AttachEntityToEntity(myped, ped, 4103, 11816, 0.48, 0.00, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 			else
 				DetachEntity(GetPlayerPed(-1), true, false)		
 			end
