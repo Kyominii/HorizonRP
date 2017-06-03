@@ -1,10 +1,14 @@
+--
+--Local variables : Please do not touch theses variables
+--
+
 if(config.useCopWhitelist == true) then
 	isCop = false
 else
 	isCop = true
 end
 local isInService = false
-local rank = "inconnu"
+local rank = "unknown"
 local checkpoints = {}
 local existingVeh = nil
 local handCuffed = false
@@ -14,6 +18,8 @@ local blipsCops = {}
 local drag = false
 local officerDrag = -1
 
+--It isn't recommanded to use this array directly, please just use it in order to retrieve quickly the key code your are searching
+--[[
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
 	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
@@ -24,7 +30,7 @@ local Keys = {
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
+}]]
 
 takingService = {
   --{x=850.156677246094, y=-1283.92004394531, z=28.0047378540039},
@@ -37,63 +43,87 @@ stationGarage = {
 	{x=452.115966796875, y=-1018.10681152344, z=28.4786586761475}
 }
 
-AddEventHandler("playerSpawned", function()
-	TriggerServerEvent("police:checkIsCop")
-end)
+--
+--Events handlers
+--
 
-RegisterNetEvent('police:receiveIsCop')
-AddEventHandler('police:receiveIsCop', function(result)
-	if(result == "inconnu") then
+if(config.useCopWhitelist == true) then
+	AddEventHandler("playerSpawned", function()
+		TriggerServerEvent("police:checkIsCop")
+	end)
+end
+
+if(config.useCopWhitelist == true) then
+	RegisterNetEvent('police:receiveIsCop')
+	AddEventHandler('police:receiveIsCop', function(result)
+		if(result == "unknown") then
+			if(config.useCopWhitelist == true) then
+				isCop = false
+			end
+		else
+			isCop = true
+			rank = result
+		end
+	end)
+end
+
+if(config.useCopWhitelist == true) then
+	RegisterNetEvent('police:nowCop')
+	AddEventHandler('police:nowCop', function()
+		isCop = true
+	end)
+end
+
+if(config.useCopWhitelist == true) then
+	RegisterNetEvent('police:noLongerCop')
+	AddEventHandler('police:noLongerCop', function()
 		if(config.useCopWhitelist == true) then
 			isCop = false
 		end
-	else
-		isCop = true
-		rank = result
-	end
-end)
+		isInService = false
+		
+		if(config.enableOutfits == true) then
+			RemoveAllPedWeapons(GetPlayerPed(-1))
+			TriggerServerEvent("skin_customization:SpawnPlayer")
+		else
+			local model = GetHashKey("a_m_y_mexthug_01")
 
-RegisterNetEvent('police:nowCop')
-AddEventHandler('police:nowCop', function()
-	isCop = true
-end)
-
-RegisterNetEvent('police:noLongerCop')
-AddEventHandler('police:noLongerCop', function()
-	if(config.useCopWhitelist == true) then
-		isCop = false
-	end
-	isInService = false
-	
-	local playerPed = GetPlayerPed(-1)
-						
-	TriggerServerEvent("skin_customization:SpawnPlayer")
-	RemoveAllPedWeapons(playerPed)
-	
-	if(existingVeh ~= nil) then
-		SetEntityAsMissionEntity(existingVeh, true, true)
-		Citizen.InvokeNative(0xEA386986E786A54F, Citizen.PointerValueIntInitialized(existingVeh))
-		existingVeh = nil
-	end
-	
-	ServiceOff()
-end)
+			RequestModel(model)
+			while not HasModelLoaded(model) do
+				RequestModel(model)
+				Citizen.Wait(0)
+			end
+		 
+			SetPlayerModel(PlayerId(), model)
+			SetModelAsNoLongerNeeded(model)
+			RemoveAllPedWeapons(GetPlayerPed(-1))
+		end
+		
+		if(existingVeh ~= nil) then
+			SetEntityAsMissionEntity(existingVeh, true, true)
+			Citizen.InvokeNative(0xEA386986E786A54F, Citizen.PointerValueIntInitialized(existingVeh))
+			existingVeh = nil
+		end
+		
+		ServiceOff()
+	end)
+end
 
 RegisterNetEvent('police:getArrested')
 AddEventHandler('police:getArrested', function()
 	if((isCop == false and config.useCopWhitelist == true) or config.useCopWhitelist == false) then
 		handCuffed = not handCuffed
 		if(handCuffed) then
-			TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "You are now cuff.")
+			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, "Gouvernement", false, "Vous êtes menotté !")
 		else
-			TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "Freedom !")
+			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, "Gouvernement", false, "Liberté !")
 			drag = false
 		end
 	end
 end)
 
+--Inspired from emergency for request system (by Jyben : https://forum.fivem.net/t/release-job-save-people-be-a-hero-paramedic-emergency-coma-ko/19773)
 local lockAskingFine = false
-
 RegisterNetEvent('police:payFines')
 AddEventHandler('police:payFines', function(amount, sender)
 	Citizen.CreateThread(function()
@@ -112,15 +142,19 @@ AddEventHandler('police:payFines', function(amount, sender)
 					break
 				end
 				
-				if IsControlPressed(1, Keys["Y"]) then
-					TriggerServerEvent('bank:withdrawAmende', amount)
+				if IsControlPressed(1, 246) then
+					if(config.useModifiedBanking == true) then
+						TriggerServerEvent('bank:withdrawAmende', amount)
+					else
+						TriggerServerEvent('bank:withdraw', amount)
+					end
 					Notification("Vous avez payé l'amende de $"..amount..".")
 					TriggerServerEvent('police:finesETA', sender, 0)
 					lockAskingFine = false
 					break
 				end
 				
-				if IsControlPressed(1, Keys["N"]) then
+				if IsControlPressed(1, 45) then
 					TriggerServerEvent('police:finesETA', sender, 3)
 					lockAskingFine = false
 					break
@@ -132,7 +166,7 @@ AddEventHandler('police:payFines', function(amount, sender)
 	end)
 end)
 
--- From es_freeroam
+-- Copy/paste from fs_freeroam (by FiveM-Script : https://forum.fivem.net/t/alpha-fs-freeroam-0-1-4-fivem-scripts/14097)
 RegisterNetEvent("police:notify")
 AddEventHandler("police:notify", function(icon, type, sender, title, text)
     Citizen.CreateThread(function()
@@ -144,11 +178,14 @@ AddEventHandler("police:notify", function(icon, type, sender, title, text)
     end)
 end)
 
-RegisterNetEvent('police:dropIllegalItem')
-AddEventHandler('police:dropIllegalItem', function(id)
-	TriggerEvent("player:looseItem", tonumber(id), exports.vdk_inventory:getQuantity(id))
-end)
+if(config.useVDKInventory == true) then
+	RegisterNetEvent('police:dropIllegalItem')
+	AddEventHandler('police:dropIllegalItem', function(id)
+		TriggerEvent("player:looseItem", tonumber(id), exports.vdk_inventory:getQuantity(id))
+	end)
+end
 
+--Piece of code given by Thefoxeur54
 RegisterNetEvent('police:unseatme')
 AddEventHandler('police:unseatme', function(t)
 	local ped = GetPlayerPed(t)        
@@ -175,7 +212,7 @@ AddEventHandler('police:forcedEnteringVeh', function(veh)
 		local entityWorld = GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0, 20.0, 0.0)
 
 		local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, GetPlayerPed(-1), 0)
-		local a, b, c, d, vehicleHandle = GetRaycastResult(rayHandle)
+		local _, _, _, _, vehicleHandle = GetRaycastResult(rayHandle)
 
 		if vehicleHandle ~= nil then
 			SetPedIntoVehicle(GetPlayerPed(-1), vehicleHandle, 1)
@@ -183,24 +220,32 @@ AddEventHandler('police:forcedEnteringVeh', function(veh)
 	end
 end)
 
-RegisterNetEvent('police:resultAllCopsInService')
-AddEventHandler('police:resultAllCopsInService', function(array)
-	allServiceCops = array
-	if(config.enableOtherCopsBlips == true) then
-		enableCopBlips()
-	end
-end)
+if(config.enableOtherCopsBlips == true) then
+	RegisterNetEvent('police:resultAllCopsInService')
+	AddEventHandler('police:resultAllCopsInService', function(array)
+		allServiceCops = array
+		if(config.enableOtherCopsBlips == true) then
+			enableCopBlips()
+		end
+	end)
+end
 
-RegisterNetEvent('es_em:cl_ResPlayer')
-AddEventHandler('es_em:cl_ResPlayer', function()
-	if(isCop and isInService) then
-		ServiceOff()
-	end
-	
-	if(handCuffed == true) then
-		handCuffed = false
-	end
-end)
+if(config.useModifiedEmergency == true) then
+	RegisterNetEvent('es_em:cl_ResPlayer')
+	AddEventHandler('es_em:cl_ResPlayer', function()
+		if(isCop and isInService) then
+			ServiceOff()
+		end
+		
+		if(handCuffed == true) then
+			handCuffed = false
+		end
+	end)
+end
+
+--
+--Functions
+--
 
 function Notification(msg)
 	SetNotificationTextEntry("STRING")
@@ -208,6 +253,7 @@ function Notification(msg)
 	DrawNotification(0,1)
 end
 
+--From Player Blips and Above Head Display (by Scammer : https://forum.fivem.net/t/release-scammers-script-collection-09-03-17/3313)
 function enableCopBlips()
 
 	for k, existingBlip in pairs(blipsCops) do
@@ -283,14 +329,14 @@ function GetClosestPlayer()
 	
 	for index,value in ipairs(players) do
 		local target = GetPlayerPed(value)
-		if(target ~= ply) then
+		--if(target ~= ply) then
 			local targetCoords = GetEntityCoords(GetPlayerPed(value), 0)
 			local distance = GetDistanceBetweenCoords(targetCoords["x"], targetCoords["y"], targetCoords["z"], plyCoords["x"], plyCoords["y"], plyCoords["z"], true)
 			if(closestDistance == -1 or closestDistance > distance) then
 				closestPlayer = value
 				closestDistance = distance
 			end
-		end
+		--end
 	end
 	
 	return closestPlayer, closestDistance
@@ -309,10 +355,6 @@ function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	SetTextEntry("STRING")
 	AddTextComponentString(text)
 	DrawText(x , y)
-end
-
-function getIsInService()
-	return isInService
 end
 
 function isNearTakeService()
@@ -345,25 +387,42 @@ end
 
 function ServiceOn()
 	isInService = true
-	TriggerServerEvent("jobssystem:jobs", 2)
+	if(config.useJobSystem == true) then
+		TriggerServerEvent("jobssystem:jobs", config.job.officer_on_duty_job_id)
+	end
 	TriggerServerEvent("police:takeService")
 end
 
 function ServiceOff()
 	isInService = false
-	TriggerServerEvent("jobssystem:jobs", 7)
+	if(config.useJobSystem == true) then
+		TriggerServerEvent("jobssystem:jobs", config.job.officer_not_on_duty_job_id)
+	end
 	TriggerServerEvent("police:breakService")
 	
-	allServiceCops = {}
-	
-	for k, existingBlip in pairs(blipsCops) do
-        RemoveBlip(existingBlip)
-    end
-	blipsCops = {}
+	if(config.enableOtherCopsBlips == true) then
+		allServiceCops = {}
+		
+		for k, existingBlip in pairs(blipsCops) do
+			RemoveBlip(existingBlip)
+		end
+		blipsCops = {}
+	end
 end
 
-local menuOpened = false;
+--
+--Exported functions
+--
 
+function getIsInService()
+	return isInService
+end
+
+--
+--Threads
+--
+
+local menuOpened = false;
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -389,7 +448,7 @@ Citizen.CreateThread(function()
 			
 			if(isInService) then
 				if(isNearStationGarage()) then
-					if(policevehicle ~= nil) then --existingVeh
+					if(policevehicle ~= nil) then
 						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour rentrer le ~b~véhicule de Police',0,1,0.5,0.8,0.6,255,255,255,255)
 					else
 						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le ~b~garage de Police',0,1,0.5,0.8,0.6,255,255,255,255)
@@ -423,6 +482,7 @@ Citizen.CreateThread(function()
 			  TaskPlayAnim(myPed, 'mp_arresting', animation, 8.0, -8, -1, flags, 0, 0, 0, 0)
 			end
 			
+			--Piece of code from Drag command (by Frazzle, Valk, Michael_Sanelli, NYKILLA1127 : https://forum.fivem.net/t/release-drag-command/22174)
 			if drag then
 				local ped = GetPlayerPed(GetPlayerFromServerId(officerDrag))
 				local myped = GetPlayerPed(-1)
@@ -433,11 +493,8 @@ Citizen.CreateThread(function()
 		end
     end
 end)
----------------------------------------------------------------------------------------
--------------------------SPAWN HELICO SUR LE TOIT ET CHECK MORT------------------------
----------------------------------------------------------------------------------------
-local alreadyDead = false
 
+local alreadyDead = false
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -489,18 +546,20 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
-		SetPlayerWantedLevel(PlayerId(), 0, false)
-		SetPlayerWantedLevelNow(PlayerId(), false)
-		ClearAreaOfCops()
-		SetPoliceIgnorePlayer(PlayerId(), true)
-		SetDispatchCopsForPlayer(PlayerId(), false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 1, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 2, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 3, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 5, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 8, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 9, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 10, false)
-		Citizen.InvokeNative(0xDC0F817884CDD856, 11, false)
+		if(config.enableNeverWanted == true) then
+			SetPlayerWantedLevel(PlayerId(), 0, false)
+			SetPlayerWantedLevelNow(PlayerId(), false)
+			ClearAreaOfCops()
+			SetPoliceIgnorePlayer(PlayerId(), true)
+			SetDispatchCopsForPlayer(PlayerId(), false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 1, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 2, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 3, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 5, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 8, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 9, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 10, false)
+			Citizen.InvokeNative(0xDC0F817884CDD856, 11, false)
+		end
     end
 end)

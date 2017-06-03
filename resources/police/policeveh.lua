@@ -44,9 +44,11 @@ local vehicle_price = 0
 function LocalPed()
 return GetPlayerPed(-1)
 end
+
 -------------------------------------------------
-----------------CONFIG SELECTION----------------
+----------------CONFIG SELECTION-----------------
 -------------------------------------------------
+
 function ButtonSelected(button)
 	local ped = GetPlayerPed(-1)
 	local this = policeveh.currentmenu
@@ -54,27 +56,32 @@ function ButtonSelected(button)
 		TriggerServerEvent('CheckPoliceVeh',button.model)
 	end
 end
+
 -------------------------------------------------
 ------------------FINISH AND CLOSE---------------
 -------------------------------------------------
+
 RegisterNetEvent('FinishPoliceCheckForVeh')
 AddEventHandler('FinishPoliceCheckForVeh', function()
 	boughtcar = true
 	CloseVeh()
 end)
+
 -------------------------------------------------
 -------------------PLAYER HAVE VEH---------------
 -------------------------------------------------
+
 function DoesPlayerHaveVehicle(model,button,y,selected)
 		local t = false
-		--TODO:check if player own car
 		if t then
 			drawMenuRight("OWNED",policeveh.menu.x,y,selected)
 		end
 end
+
 -------------------------------------------------
 ----------------CONFIG OPEN MENU-----------------
 -------------------------------------------------
+
 function OpenMenuVeh(menu)
 	fakecar = {model = '', car = nil}
 	policeveh.lastmenu = policeveh.currentmenu
@@ -86,17 +93,21 @@ function OpenMenuVeh(menu)
 	policeveh.selectedbutton = 0
 	policeveh.currentmenu = menu
 end
+
 -------------------------------------------------
 ------------------DRAW NOTIFY--------------------
 -------------------------------------------------
+
 function drawNotification(text)
 	SetNotificationTextEntry("STRING")
 	AddTextComponentString(text)
 	DrawNotification(false, false)
 end
+
 -------------------------------------------------
 ------------------DRAW TITLE MENU----------------
 -------------------------------------------------
+
 function drawMenuTitle(txt,x,y)
 local menu = policeveh.menu
 	SetTextFont(2)
@@ -108,9 +119,11 @@ local menu = policeveh.menu
 	DrawRect(x,y,menu.width,menu.height,0,0,0,150)
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU BOUTON---------------
 -------------------------------------------------
+
 function drawMenuButton(button,x,y,selected)
 	local menu = policeveh.menu
 	SetTextFont(menu.font)
@@ -131,9 +144,11 @@ function drawMenuButton(button,x,y,selected)
 	end
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU INFO-----------------
 -------------------------------------------------
+
 function drawMenuInfo(text)
 	local menu = policeveh.menu
 	SetTextFont(menu.font)
@@ -146,9 +161,11 @@ function drawMenuInfo(text)
 	DrawRect(0.675, 0.95,0.65,0.050,0,0,0,150)
 	DrawText(0.365, 0.934)
 end
+
 -------------------------------------------------
 ----------------DRAW MENU DROIT------------------
 -------------------------------------------------
+
 function drawMenuRight(txt,x,y,selected)
 	local menu = policeveh.menu
 	SetTextFont(menu.font)
@@ -165,9 +182,11 @@ function drawMenuRight(txt,x,y,selected)
 	AddTextComponentString(txt)
 	DrawText(x + menu.width/2 - 0.03, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 -------------------DRAW TEXT---------------------
 -------------------------------------------------
+
 function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	SetTextFont(font)
 	SetTextProportional(0)
@@ -182,9 +201,11 @@ function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	AddTextComponentString(text)
 	DrawText(x , y)
 end
+
 -------------------------------------------------
 ----------------CONFIG BACK MENU-----------------
 -------------------------------------------------
+
 function Back()
 	if backlock then
 		return
@@ -201,9 +222,11 @@ function Back()
 		OpenMenuVeh(policeveh.lastmenu)
 	end
 end
+
 -------------------------------------------------
 ----------------FONCTION ???????-----------------
 -------------------------------------------------
+
 function f(n)
 return n + 0.0001
 end
@@ -239,9 +262,11 @@ end
 function stringstarts(String,Start)
    return string.sub(String,1,string.len(Start))==Start
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN--------------------
 -------------------------------------------------
+
 function OpenVeh() --OpenCreator
 	boughtcar = false
 	local ped = LocalPed()
@@ -255,9 +280,11 @@ function OpenVeh() --OpenCreator
 	policeveh.opened = true
 	policeveh.selectedbutton = 0
 end
+
 -------------------------------------------------
 ----------------FONCTION CLOSE-------------------
 -------------------------------------------------
+
 function CloseVeh() -- Close Creator
 	Citizen.CreateThread(function()
 		local ped = LocalPed()
@@ -284,10 +311,6 @@ function CloseVeh() -- Close Creator
 			end
 			policevehicle = CreateVehicle(model, plyCoords["x"], plyCoords["y"], plyCoords["z"],90.0,true,false)
 			SetModelAsNoLongerNeeded(model)
-			--[[for i,mod in pairs(mods) do
-				SetVehicleModKit(policevehicle,0)
-				SetVehicleMod(policevehicle,i,mod)
-			end]]
 			
 			SetVehicleMod(policevehicle, 11, 2)
 			SetVehicleMod(policevehicle, 12, 2)
@@ -314,9 +337,11 @@ function CloseVeh() -- Close Creator
 		policeveh.menu.to = 10
 	end)
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN MENU---------------
 -------------------------------------------------
+
 if(config.useNativePoliceGarage == true) then
 	local backlock = false
 	Citizen.CreateThread(function()
@@ -346,9 +371,6 @@ if(config.useNativePoliceGarage == true) then
 							selected = false
 						end
 						drawMenuButton(button,policeveh.menu.x,y,selected)
-						--if button.distance ~= nil then
-							--drawMenuRight(button.distance.."m",policeveh.menu.x,y,selected)
-						--end
 						y = y + 0.04
 						if policeveh.currentmenu == "main" then
 							if selected then
@@ -373,7 +395,6 @@ if(config.useNativePoliceGarage == true) then
 										FreezeEntityPosition(veh,true)
 										SetEntityInvincible(veh,true)
 										SetVehicleDoorsLocked(veh,4)
-										--SetEntityCollision(veh,false,false)
 										TaskWarpPedIntoVehicle(LocalPed(),veh,-1)
 										for i = 0,24 do
 											SetVehicleModKit(veh,0)
@@ -419,9 +440,11 @@ if(config.useNativePoliceGarage == true) then
 		end
 	end)
 end
+
 ---------------------------------------------------
 ------------------EVENT SPAWN VEH------------------
 ---------------------------------------------------
+
 RegisterNetEvent('policeveh:spawnVehicle')
 AddEventHandler('policeveh:spawnVehicle', function(v)
 	local car = GetHashKey(v)
