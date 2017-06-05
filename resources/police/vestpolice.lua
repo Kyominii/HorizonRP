@@ -2,18 +2,20 @@
 ----------------------------------------------------POLICE CLOACKROOM--------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 local buttonsVest = {}
-buttonsVest[1] = {name = "Prendre le service (uniforme)", description = ""}
-buttonsVest[#buttonsVest+1] = {name = "Fin de service", description = ""}
+buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_take_service_normal_title"], description = ""}
+buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_take_service_hidden_title"], description = ""}
+buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_take_service_swat_title"], description = ""}
+buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_break_service_title"], description = ""}
 if(config.enableOutfits == true) then
-	buttonsVest[#buttonsVest+1] = {name = "Gilet par balle", description = ""}
-	buttonsVest[#buttonsVest+1] = {name = "Enlever le Gilet par balle", description = ""}
-	buttonsVest[#buttonsVest+1] = {name = "Gilet jaune", description = ""}
-	buttonsVest[#buttonsVest+1] = {name = "Enlever le Gilet jaune", description = ""}
+	buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_add_bulletproof_vest_title"], description = ""}
+	buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_remove_bulletproof_vest_title"], description = ""}
+	buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_add_yellow_vest_title"], description = ""}
+	buttonsVest[#buttonsVest+1] = {name = txt[config.lang]["cloackroom_remove_yellow_vest_title"], description = ""}
 end
 
 local vestpolice = {
 	opened = false,
-	title = "Vestiaire Police",
+	title = txt[config.lang]["cloackroom_global_title"],
 	currentmenu = "main",
 	lastmenu = nil,
 	currentpos = nil,
@@ -30,18 +32,9 @@ local vestpolice = {
 		scale = 0.4,
 		font = 0,
 		["main"] = {
-			title = "CATEGORIES",
+			title = txt[config.lang]["menu_categories_title"],
 			name = "main",
-			buttons = {
-				{name = "Prendre le service (uniforme)", description = ""},
-				{name = "Prendre le service (BAC)", description = ""},
-				{name = "Prendre le service (intervention)", description = ""},
-				{name = "Gilet par balle", description = ""},
-				{name = "Enlever le Gilet par balle", description = ""},
-				{name = "Gilet jaune", description = ""},
-				{name = "Enlever le Gilet jaune", description = ""},
-				{name = "Fin de service", description = ""},
-			}
+			buttons = buttonsVest
 		},
 	}
 }
@@ -57,12 +50,12 @@ function ButtonSelectedVest(button)
 	local this = vestpolice.currentmenu
 	local btn = button.name
 	if this == "main" then
-		if btn == "Prendre le service (uniforme)" then
+		if btn == txt[config.lang]["cloackroom_take_service_normal_title"] then
 			ServiceOn()
 			giveUniforme()
-			drawNotification("Vous êtes maintenant ~g~En service")
-			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
-		elseif btn == "Prendre le service (BAC)" then
+			drawNotification(txt[config.lang]["now_in_service_notification"])
+			drawNotification(txt[config.lang]["help_open_menu_notification"])
+		elseif btn == txt[config.lang]["cloackroom_take_service_hidden_title"] then
 			ServiceOn()
 			
 			RemoveAllPedWeapons(GetPlayerPed(-1), true)
@@ -70,18 +63,18 @@ function ButtonSelectedVest(button)
 			GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_STUNGUN"), true, true)
 			GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_FLASHLIGHT"), true, true)
 			
-			drawNotification("Vous êtes maintenant ~g~En service")
-			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
-		elseif btn == "Prendre le service (intervention)" then
+			drawNotification(txt[config.lang]["now_in_service_notification"])
+			drawNotification(txt[config.lang]["help_open_menu_notification"])
+		elseif btn == txt[config.lang]["cloackroom_take_service_swat_title"] then
 			ServiceOn()
 			giveInterventionUniforme()
-			drawNotification("Vous êtes maintenant ~g~En service")
-			drawNotification("Appuyer sur ~g~F5~w~ pour ouvrir le ~b~Menu Police")
-		elseif btn == "Fin de service" then
+			drawNotification(txt[config.lang]["now_in_service_notification"])
+			drawNotification(txt[config.lang]["help_open_menu_notification"])
+		elseif btn == txt[config.lang]["cloackroom_break_service_title"] then
 			ServiceOff()
 			removeUniforme()                                            --Finir Service + Enleve Uniforme
-			drawNotification("Vous avez ~r~terminé votre service")
-		elseif btn == "Gilet par balle" then
+			drawNotification(txt[config.lang]["break_service_notification"])
+		elseif btn == txt[config.lang]["cloackroom_add_bulletproof_vest_title"] then
 			Citizen.CreateThread(function()
 				if(GetEntityModel(GetPlayerPed(-1)) == hashSkin) then
 					SetPedComponentVariation(GetPlayerPed(-1), 9, 4, 1, 2)  --Gilet par balle
@@ -90,12 +83,12 @@ function ButtonSelectedVest(button)
 				end
 				SetPedArmour(GetPlayerPed(-1), 100)
 			end)
-		elseif btn == "Enlever le Gilet par balle" then
+		elseif btn == txt[config.lang]["cloackroom_remove_bulletproof_vest_title"] then
 			Citizen.CreateThread(function()
 				SetPedComponentVariation(GetPlayerPed(-1), 9, 0, 1, 2)  --Remove Gilet par balle
 				SetPedArmour(GetPlayerPed(-1), 0)
 			end)
-		elseif btn == "Gilet jaune" then
+		elseif btn == txt[config.lang]["cloackroom_add_yellow_vest_title"] then
 			Citizen.CreateThread(function()
 				if(GetEntityModel(GetPlayerPed(-1)) == hashSkin) then
 					SetPedComponentVariation(GetPlayerPed(-1), 8, 59, 0, 2) --Gilet jaune
@@ -103,7 +96,7 @@ function ButtonSelectedVest(button)
 					SetPedComponentVariation(GetPlayerPed(-1), 8, 36, 0, 2)
 				end
 			end)
-		elseif btn == "Enlever le Gilet jaune" then
+		elseif btn == txt[config.lang]["cloackroom_remove_yellow_vest_title"] then
 			Citizen.CreateThread(function()
 				if(GetEntityModel(GetPlayerPed(-1)) == hashSkin) then
 					SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 2) --Remove Gilet jaune + Remet la ceinture

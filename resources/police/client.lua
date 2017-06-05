@@ -114,9 +114,9 @@ AddEventHandler('police:getArrested', function()
 	if((isCop == false and config.useCopWhitelist == true) or config.useCopWhitelist == false) then
 		handCuffed = not handCuffed
 		if(handCuffed) then
-			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, "Gouvernement", false, "Vous êtes menotté !")
+			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, txt[config.lang]["title_notification"], false, txt[config.lang]["now_cuffed"])
 		else
-			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, "Gouvernement", false, "Liberté !")
+			TriggerEvent("police:notify",  "CHAR_ANDREAS", 1, txt[config.lang]["title_notification"], false, txt[config.lang]["now_uncuffed"])
 			drag = false
 		end
 	end
@@ -131,13 +131,13 @@ AddEventHandler('police:payFines', function(amount, sender)
 		if(lockAskingFine ~= true) then
 			lockAskingFine = true
 			local notifReceivedAt = GetGameTimer()
-			Notification("Appuyez sur ~g~Y~s~ pour accepter l\'amende de $"..amount..", appuyez sur ~r~N~s~ pour la refuser !")
+			Notification(txt[config.lang]["info_fine_request_before_amount"]..amount..txt[config.lang]["info_fine_request_after_amount"])
 			while(true) do
 				Wait(0)
 				
 				if (GetTimeDifference(GetGameTimer(), notifReceivedAt) > 15000) then
 					TriggerServerEvent('police:finesETA', sender, 2)
-					Notification("La demande de l'amende à ~r~expirée~s~ !")
+					Notification(txt[config.lang]["request_fine_expired"])
 					lockAskingFine = false
 					break
 				end
@@ -148,7 +148,7 @@ AddEventHandler('police:payFines', function(amount, sender)
 					else
 						TriggerServerEvent('bank:withdraw', amount)
 					end
-					Notification("Vous avez payé l'amende de $"..amount..".")
+					Notification(txt[config.lang]["pay_fine_success_before_amount"]..amount..txt[config.lang]["pay_fine_success_after_amount"])
 					TriggerServerEvent('police:finesETA', sender, 0)
 					lockAskingFine = false
 					break
@@ -329,14 +329,14 @@ function GetClosestPlayer()
 	
 	for index,value in ipairs(players) do
 		local target = GetPlayerPed(value)
-		--if(target ~= ply) then
+		if(target ~= ply) then
 			local targetCoords = GetEntityCoords(GetPlayerPed(value), 0)
 			local distance = GetDistanceBetweenCoords(targetCoords["x"], targetCoords["y"], targetCoords["z"], plyCoords["x"], plyCoords["y"], plyCoords["z"], true)
 			if(closestDistance == -1 or closestDistance > distance) then
 				closestPlayer = value
 				closestDistance = distance
 			end
-		--end
+		end
 	end
 	
 	return closestPlayer, closestDistance
@@ -429,7 +429,7 @@ Citizen.CreateThread(function()
         if(isCop) then
 			if(isNearTakeService()) then
 			
-				DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le ~b~vestiaire de Police',0,1,0.5,0.8,0.6,255,255,255,255) -- ~g~E~s~
+				DisplayHelpText(txt[config.lang]["help_text_open_cloackroom"],0,1,0.5,0.8,0.6,255,255,255,255) -- ~g~E~s~
 				if IsControlJustPressed(1,51) then
 					OpenMenuVest()
 				end
@@ -449,9 +449,9 @@ Citizen.CreateThread(function()
 			if(isInService) then
 				if(isNearStationGarage()) then
 					if(policevehicle ~= nil) then
-						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour rentrer le ~b~véhicule de Police',0,1,0.5,0.8,0.6,255,255,255,255)
+						DisplayHelpText(txt[config.lang]["help_text_put_car_into_garage"],0,1,0.5,0.8,0.6,255,255,255,255)
 					else
-						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le ~b~garage de Police',0,1,0.5,0.8,0.6,255,255,255,255)
+						DisplayHelpText(txt[config.lang]["help_text_get_car_out_garage"],0,1,0.5,0.8,0.6,255,255,255,255)
 					end
 					
 					if IsControlJustPressed(1,51) then
@@ -516,9 +516,9 @@ Citizen.CreateThread(function()
 			
 				if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), 449.113,-981.084,43.691, true ) < 5 then
 					if(existingVeh ~= nil) then
-						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour rentrer le ~b~véhicule de Police',0,1,0.5,0.8,0.6,255,255,255,255)
+						DisplayHelpText(txt[config.lang]["help_text_put_heli_into_garage"],0,1,0.5,0.8,0.6,255,255,255,255)
 					else
-						DisplayHelpText('Appuyez sur ~INPUT_CONTEXT~ pour sortir un ~b~hélicoptère de Police',0,1,0.5,0.8,0.6,255,255,255,255)
+						DisplayHelpText(txt[config.lang]["help_text_get_heli_out_garage"],0,1,0.5,0.8,0.6,255,255,255,255)
 					end
 					
 					if IsControlJustPressed(1,51)  then

@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------VESTIAIRE POLICE---------------------------------------------
+----------------------------------------------------POLICE CLOACKROOM--------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 local buttonsVest = {}
 buttonsVest[1] = {name = "Prendre le service (uniforme)", description = ""}
@@ -10,7 +10,6 @@ if(config.enableOutfits == true) then
 	buttonsVest[#buttonsVest+1] = {name = "Gilet jaune", description = ""}
 	buttonsVest[#buttonsVest+1] = {name = "Enlever le Gilet jaune", description = ""}
 end
-
 
 local vestpolice = {
 	opened = false,
@@ -48,9 +47,11 @@ local vestpolice = {
 }
 
 local hashSkin = GetHashKey("mp_m_freemode_01")
+
 -------------------------------------------------
 ----------------CONFIG SELECTION----------------
 -------------------------------------------------
+
 function ButtonSelectedVest(button)
 	local ped = GetPlayerPed(-1)
 	local this = vestpolice.currentmenu
@@ -113,32 +114,34 @@ function ButtonSelectedVest(button)
 		end
 	end
 end
+
 -------------------------------------------------
-------------------FONCTION UNIFORME--------------
+------------------UNIFORM FUNCTIONS--------------
 -------------------------------------------------
+
 function giveUniforme()
 	Citizen.CreateThread(function()
 		if(config.enableOutfits == true) then
 			if(GetEntityModel(GetPlayerPed(-1)) == hashSkin) then
 
-				SetPedPropIndex(GetPlayerPed(-1), 1, 5, 0, 2)             --Lunette Soleil
-				SetPedPropIndex(GetPlayerPed(-1), 2, 0, 0, 2)             --Ecouteur Bluetooh
-				SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 2)  --Chemise Police
-				SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 2)   --Ceinture+matraque Police 
-				SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 2)   --Pantalon Police
-				SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 2)   --Chaussure Police
-				SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 2)   --grade 0
+				SetPedPropIndex(GetPlayerPed(-1), 1, 5, 0, 2)             --Sunglasses
+				SetPedPropIndex(GetPlayerPed(-1), 2, 0, 0, 2)             --Bluetoothn earphone
+				SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 2)  --Shirt
+				SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 2)   --Nightstick decoration
+				SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 2)   --Pants
+				SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 2)   --Shooes
+				SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 2)   --rank
 				
 			else
 
-				SetPedPropIndex(GetPlayerPed(-1), 1, 11, 3, 2)           --Lunette Soleil
-				SetPedPropIndex(GetPlayerPed(-1), 2, 0, 0, 2)            --Ecouteur Bluetooh
-				SetPedComponentVariation(GetPlayerPed(-1), 3, 14, 0, 2)  --Tshirt non bug
-				SetPedComponentVariation(GetPlayerPed(-1), 11, 48, 0, 2) --Chemise Police
-				SetPedComponentVariation(GetPlayerPed(-1), 8, 35, 0, 2)  --Ceinture+matraque Police 
-				SetPedComponentVariation(GetPlayerPed(-1), 4, 34, 0, 2)  --Pantalon Police
-				SetPedComponentVariation(GetPlayerPed(-1), 6, 29, 0, 2)  -- Chaussure Police
-				SetPedComponentVariation(GetPlayerPed(-1), 10, 7, 0, 2)  --grade 0
+				SetPedPropIndex(GetPlayerPed(-1), 1, 11, 3, 2)           --Sunglasses
+				SetPedPropIndex(GetPlayerPed(-1), 2, 0, 0, 2)            --Bluetoothn earphone
+				SetPedComponentVariation(GetPlayerPed(-1), 3, 14, 0, 2)  --Non buggy tshirt
+				SetPedComponentVariation(GetPlayerPed(-1), 11, 48, 0, 2) --Shirt
+				SetPedComponentVariation(GetPlayerPed(-1), 8, 35, 0, 2)  --Nightstick decoration
+				SetPedComponentVariation(GetPlayerPed(-1), 4, 34, 0, 2)  --Pants
+				SetPedComponentVariation(GetPlayerPed(-1), 6, 29, 0, 2)  --Shooes
+				SetPedComponentVariation(GetPlayerPed(-1), 10, 7, 0, 2)  --rank
 			
 			end
 		else
@@ -204,6 +207,7 @@ function removeUniforme()
 		 
 			SetPlayerModel(PlayerId(), model)
 			SetModelAsNoLongerNeeded(model)
+			RemoveAllPedWeapons(GetPlayerPed(-1))
 		end
 	end)
 end
@@ -227,34 +231,42 @@ function removeUniforme()
 		end
 	end)
 end
+
 -------------------------------------------------
 ----------------CONFIG OPEN MENU-----------------
 -------------------------------------------------
+
 function OpenVestMenu(menu)
 	vestpolice.menu.from = 1
 	vestpolice.menu.to = 10
 	vestpolice.selectedbutton = 0
 	vestpolice.currentmenu = menu
 end
+
 -------------------------------------------------
 ------------------DRAW NOTIFY--------------------
 -------------------------------------------------
+
 function drawNotification(text)
 	SetNotificationTextEntry("STRING")
 	AddTextComponentString(text)
 	DrawNotification(false, false)
 end
+
 --------------------------------------
 -------------DISPLAY HELP TEXT--------
 --------------------------------------
+
 function DisplayHelpText(str)
 	SetTextComponentFormat("STRING")
 	AddTextComponentString(str)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
+
 -------------------------------------------------
 ------------------DRAW TITLE MENU----------------
 -------------------------------------------------
+
 function drawMenuTitle(txt,x,y)
 local menu = vestpolice.menu
 	SetTextFont(2)
@@ -266,9 +278,11 @@ local menu = vestpolice.menu
 	DrawRect(x,y,menu.width,menu.height,0,0,0,150)
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU BOUTON---------------
 -------------------------------------------------
+
 function drawMenuButton(button,x,y,selected)
 	local menu = vestpolice.menu
 	SetTextFont(menu.font)
@@ -289,9 +303,11 @@ function drawMenuButton(button,x,y,selected)
 	end
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU INFO-----------------
 -------------------------------------------------
+
 function drawMenuInfo(text)
 	local menu = vestpolice.menu
 	SetTextFont(menu.font)
@@ -304,9 +320,11 @@ function drawMenuInfo(text)
 	DrawRect(0.675, 0.95,0.65,0.050,0,0,0,150)
 	DrawText(0.365, 0.934)
 end
+
 -------------------------------------------------
 ----------------DRAW MENU DROIT------------------
 -------------------------------------------------
+
 function drawMenuRight(txt,x,y,selected)
 	local menu = vestpolice.menu
 	SetTextFont(menu.font)
@@ -323,9 +341,11 @@ function drawMenuRight(txt,x,y,selected)
 	AddTextComponentString(txt)
 	DrawText(x + menu.width/2 - 0.03, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 -------------------DRAW TEXT---------------------
 -------------------------------------------------
+
 function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	SetTextFont(font)
 	SetTextProportional(0)
@@ -340,9 +360,11 @@ function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	AddTextComponentString(text)
 	DrawText(x , y)
 end
+
 -------------------------------------------------
 ----------------CONFIG BACK MENU-----------------
 -------------------------------------------------
+
 function BackVest()
 	if backlock then
 		return
@@ -352,9 +374,11 @@ function BackVest()
 		CloseMenuVest()
 	end
 end
+
 -------------------------------------------------
 ---------------------FONCTION--------------------
 -------------------------------------------------
+
 function f(n)
 return n + 0.0001
 end
@@ -390,25 +414,31 @@ end
 function stringstarts(String,Start)
    return string.sub(String,1,string.len(Start))==Start
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN--------------------
 -------------------------------------------------
+
 function OpenMenuVest()
 	vestpolice.currentmenu = "main"
 	vestpolice.opened = true
 	vestpolice.selectedbutton = 0
 end
+
 -------------------------------------------------
 ----------------FONCTION CLOSE-------------------
 -------------------------------------------------
+
 function CloseMenuVest()
 		vestpolice.opened = false
 		vestpolice.menu.from = 1
 		vestpolice.menu.to = 10
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN MENU---------------
 -------------------------------------------------
+
 local backlock = false
 Citizen.CreateThread(function()
 	while true do
@@ -473,6 +503,5 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
-
 	end
 end)

@@ -5,32 +5,32 @@
 local buttonsCitizen = {}
 
 if(config.useGcIdentity == true) then
-	buttonsCitizen[1] = {name = "Carte d'identité", description = ''}
+	buttonsCitizen[1] = {name = txt[config.lang]["menu_id_card_title"], description = ''}
 end
 
 if(config.useVDKInventory == true or config.useWeashop == true) then
-	buttonsCitizen[#buttonsCitizen+1] = {name = "Fouiller", description = ''}
+	buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_check_inventory_title"], description = ''}
 end
 
-buttonsCitizen[#buttonsCitizen+1] = {name = "(De)Menotter", description = ''}
-buttonsCitizen[#buttonsCitizen+1] = {name = "Mettre dans le véhicule", description = ''}
-buttonsCitizen[#buttonsCitizen+1] = {name = "Faire sortir du véhicule", description = ''}
-buttonsCitizen[#buttonsCitizen+1] = {name = "Escorter le joueur", description = ''}
-buttonsCitizen[#buttonsCitizen+1] = {name = "Amendes", description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_toggle_cuff_title"], description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_force_player_get_in_car_title"], description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_force_player_get_out_car_title"], description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_drag_player_title"], description = ''}
+buttonsCitizen[#buttonsCitizen+1] = {name = txt[config.lang]["menu_fines_title"], description = ''}
 
 
 local buttonsVehicle = {}
 
 if(config.enableCheckPlate == true) then
-	buttonsVehicle[1] = {name = "Plaque d'immatriculation", description = ''}
+	buttonsVehicle[1] = {name = txt[config.lang]["menu_check_plate_title"], description = ''}
 end
 
-buttonsVehicle[#buttonsVehicle+1] = {name = "Crocheter le véhicule", description = ''}
+buttonsVehicle[#buttonsVehicle+1] = {name = txt[config.lang]["menu_crochet_veh_title"], description = ''}
 
 local menupolice = {
 	opened = false,
-	title = "Menu Police",
-	currentmenu = "main",
+	title = txt[config.lang]["menu_global_title"],
+	currentmenu = txt[config.lang]["menu_categories_title"],
 	lastmenu = nil,
 	currentpos = nil,
 	selectedbutton = 0,
@@ -45,34 +45,34 @@ local menupolice = {
 		to = 10,
 		scale = 0.4,
 		font = 0,
-		["main"] = {
-			title = "CATEGORIES",
-			name = "main",
+		[txt[config.lang]["menu_categories_title"]] = {
+			title = txt[config.lang]["menu_categories_title"],
+			name = txt[config.lang]["menu_categories_title"],
 			buttons = {
-				{name = "Animations", description = ""},
-				{name = "Citoyen", description = ""},
-				{name = "Véhicule", description = ""},
-				{name = "Fermer le Menu", description = ""},
+				{name = txt[config.lang]["menu_animations_title"], description = ""},
+				{name = txt[config.lang]["menu_citizens_title"], description = ""},
+				{name = txt[config.lang]["menu_vehicles_title"], description = ""},
+				{name = txt[config.lang]["menu_close_menu_title"], description = ""},
 			}
 		},
-		["Animations"] = {
-			title = "ANIMATIONS",
-			name = "Animations",
+		[txt[config.lang]["menu_animations_title"]] = {
+			title = txt[config.lang]["menu_animations_title"],
+			name = txt[config.lang]["menu_animations_title"],
 			buttons = {
-				{name = "Faire la circulation", description = ''},
-				{name = "Prendre des notes", description = ''},
-				{name = "Stand By", description = ''},
-				{name = "Stand By 2", description = ''},
+				{name = txt[config.lang]["menu_anim_do_traffic_title"], description = ''},
+				{name = txt[config.lang]["menu_anim_take_notes_title"], description = ''},
+				{name = txt[config.lang]["menu_anim_standby_title"], description = ''},
+				{name = txt[config.lang]["menu_anim_standby_2_title"], description = ''},
 			}
 		},
-		["Citoyen"] = {
-			title = "INTERACTION CITOYEN",
-			name = "Citoyen",
+		[txt[config.lang]["menu_citizens_title"]] = {
+			title = txt[config.lang]["menu_citizens_title"],
+			name = txt[config.lang]["menu_citizens_title"],
 			buttons = buttonsCitizen
 		},
-		["Amendes"] = {
-			title = "AMENDES",
-			name = "Amendes",
+		[txt[config.lang]["menu_fines_title"]] = {
+			title = txt[config.lang]["menu_fines_title"],
+			name = txt[config.lang]["menu_fines_title"],
 			buttons = {
 				{name = "$250", description = ''},
 				{name = "$500", description = ''},
@@ -83,12 +83,12 @@ local menupolice = {
 				{name = "$6000", description = ''},
 				{name = "$8000", description = ''},
 				{name = "$10000", description = ''},
-				{name = "Autre montant", description = ''},
+				{name = txt[config.lang]["menu_custom_amount_fine_title"], description = ''},
 			}
 		},
-		["Véhicule"] = {
-			title = "INTERACTION VEHICULE",
-			name = "Véhicule",
+		[txt[config.lang]["menu_vehicles_title"]] = {
+			title = txt[config.lang]["menu_vehicles_title"],
+			name = txt[config.lang]["menu_vehicles_title"],
 			buttons = buttonsVehicle
 		},
 	}
@@ -102,49 +102,49 @@ function ButtonSelectedPolice(button)
 	local ped = GetPlayerPed(-1)
 	local this = menupolice.currentmenu
 	local btn = button.name
-	if this == "main" then
-		if btn == "Animations" then
-			OpenMenuPolice('Animations')
-		elseif btn == "Citoyen" then
-			OpenMenuPolice('Citoyen')
-		elseif btn == "Véhicule" then
-			OpenMenuPolice('Véhicule')
-		elseif btn == "Fermer le Menu" then
+	if this == txt[config.lang]["menu_categories_title"] then
+		if btn == txt[config.lang]["menu_animations_title"] then
+			OpenMenuPolice(txt[config.lang]["menu_animations_title"])
+		elseif btn == txt[config.lang]["menu_citizens_title"] then
+			OpenMenuPolice(txt[config.lang]["menu_citizens_title"])
+		elseif btn == txt[config.lang]["menu_vehicles_title"] then
+			OpenMenuPolice(txt[config.lang]["menu_vehicles_title"])
+		elseif btn == txt[config.lang]["menu_close_menu_title"] then
 			CloseMenuPolice()
 		end
-	elseif this == "Animations" then
-		if btn == "Faire la circulation" then
+	elseif this == txt[config.lang]["menu_animations_title"] then
+		if btn == txt[config.lang]["menu_anim_do_traffic_title"] then
 			DoTraffic()
-		elseif btn == "Prendre des notes" then
+		elseif btn == txt[config.lang]["menu_anim_take_notes_title"] then
 			Note()
-		elseif btn == "Stand By" then
+		elseif btn == txt[config.lang]["menu_anim_standby_title"] then
 			StandBy()
-		elseif btn == "Stand By 2" then
+		elseif btn == txt[config.lang]["menu_anim_standby_2_title"] then
 			StandBy2()
 		end
-	elseif this == "Citoyen" then
-		if btn == "Amendes" then
-			OpenMenuPolice('Amendes')
-		elseif btn == "Fouiller" then
+	elseif this == txt[config.lang]["menu_citizens_title"] then
+		if btn == txt[config.lang]["menu_fines_title"] then
+			OpenMenuPolice(txt[config.lang]["menu_fines_title"])
+		elseif btn == txt[config.lang]["menu_check_inventory_title"] then
 			CheckInventory()
-		elseif btn == "(De)Menotter" then
+		elseif btn == txt[config.lang]["menu_toggle_cuff_title"] then
 			ToggleCuff()
-		elseif btn == "Mettre dans le véhicule" then
+		elseif btn == txt[config.lang]["menu_force_player_get_in_car_title"] then
 			PutInVehicle()
-		elseif btn == "Faire sortir du véhicule" then
+		elseif btn == txt[config.lang]["menu_force_player_get_out_car_title"] then
 			UnseatVehicle()
-		elseif btn == "Escorter le joueur" then
+		elseif btn == txt[config.lang]["menu_drag_player_title"] then
 			DragPlayer()
-		elseif btn == "Carte d'identité" then
+		elseif btn == txt[config.lang]["menu_id_card_title"] then
 			CheckId()
 		end
-	elseif this == "Véhicule" then
-		if btn == "Crocheter le véhicule"then
+	elseif this == txt[config.lang]["menu_vehicles_title"] then
+		if btn == txt[config.lang]["menu_crochet_veh_title"] then
 			Crochet()
-		elseif btn == "Plaque d'immatriculation" then
+		elseif btn == txt[config.lang]["menu_check_plate_title"] then
 			CheckPlate()
 		end
-	elseif this == "Amendes" then
+	elseif this == txt[config.lang]["menu_fines_title"] then
 		if btn == "$250"then
 			Fines(250)
 		elseif btn == "$500" then
@@ -163,7 +163,7 @@ function ButtonSelectedPolice(button)
 			Fines(8000)
 		elseif btn == "$10000" then
 			Fines(10000)
-		elseif btn == "Autre montant" then
+		elseif btn == txt[config.lang]["menu_custom_amount_fine_title"] then
 			Fines(-1)
 		end
 	end
@@ -179,7 +179,7 @@ function DoTraffic()
         Citizen.Wait(60000)
         ClearPedTasksImmediately(GetPlayerPed(-1))
     end)
-	drawNotification("~g~Vous faites la circulation.")
+	drawNotification(txt[config.lang]["menu_doing_traffic_notification"])
 end
 
 function Note()
@@ -188,7 +188,7 @@ function Note()
         Citizen.Wait(20000)
         ClearPedTasksImmediately(GetPlayerPed(-1))
     end) 
-	drawNotification("~g~Vous prenez des notes.")
+	drawNotification(txt[config.lang]["menu_taking_notes_notification"])
 end
 
 function StandBy()
@@ -197,7 +197,7 @@ function StandBy()
         Citizen.Wait(20000)
         ClearPedTasksImmediately(GetPlayerPed(-1))
     end)
-	drawNotification("~g~Vous êtes en Stand By.")
+	drawNotification(txt[config.lang]["menu_being_stand_by_notification"])
 end
 
 function StandBy2()
@@ -206,7 +206,7 @@ function StandBy2()
         Citizen.Wait(20000)
         ClearPedTasksImmediately(GetPlayerPed(-1))
     end)
-	drawNotification("~g~Vous êtes en Stand By.")
+	drawNotification(txt[config.lang]["menu_being_stand_by_notification"])
 end
 
 -------------------------------------------------
@@ -218,7 +218,7 @@ function CheckInventory()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:targetCheckInventory", GetPlayerServerId(t))
 	else
-		TriggerEvent('chatMessage', 'GOVERNMENT', {255, 0, 0}, "No player near you !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -227,7 +227,7 @@ function CheckId()
     if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent('gc:copOpenIdentity', GetPlayerServerId(t))
     else
-		TriggerEvent('chatMessage', 'GOVERNMENT', {255, 0, 0}, "No player near you !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -236,7 +236,7 @@ function ToggleCuff()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:cuffGranted", GetPlayerServerId(t))
 	else
-		TriggerEvent('chatMessage', 'GOVERNMENT', {255, 0, 0}, "No player near you (maybe get closer) !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -246,7 +246,7 @@ function PutInVehicle()
 		local v = GetVehiclePedIsIn(GetPlayerPed(-1), true)
 		TriggerServerEvent("police:forceEnterAsk", GetPlayerServerId(t), v)
 	else
-		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -255,7 +255,7 @@ function UnseatVehicle()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:confirmUnseat", GetPlayerServerId(t))
 	else
-		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -264,7 +264,7 @@ function DragPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:dragRequest", GetPlayerServerId(t))
 	else
-		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -289,7 +289,7 @@ function Fines(amount)
 			TriggerServerEvent("police:finesGranted", GetPlayerServerId(t), amount)
 		end
 	else
-		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No player near you (maybe get closer) !")
+		TriggerEvent('chatMessage', txt[config.lang]["title_notification"], {255, 0, 0}, txt[config.lang]["no_player_near_ped"])
 	end
 end
 
@@ -299,15 +299,20 @@ end
 
 function Crochet()
 	Citizen.CreateThread(function()
-	local ply = GetPlayerPed(-1)
-	local plyCoords = GetEntityCoords(ply, 0)
-	--GetClosestVehicle(x,y,z,distance dectection, 0 = tous les vehicules, Flag 70 = tous les veicules sauf police a tester https://pastebin.com/kghNFkRi)
-	veh = GetClosestVehicle(plyCoords["x"], plyCoords["y"], plyCoords["z"], 5.001, 0, 70)
-	TaskStartScenarioInPlace(GetPlayerPed(-1), "WORLD_HUMAN_WELDING", 0, true)
-	Citizen.Wait(20000)
-    SetVehicleDoorsLocked(veh, 1)
-	ClearPedTasksImmediately(GetPlayerPed(-1))
-	drawNotification("Le véhicule est ~g~ouvert~w~.")
+		local pos = GetEntityCoords(GetPlayerPed(-1))
+		local entityWorld = GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0, 20.0, 0.0)
+
+		local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, GetPlayerPed(-1), 0)
+		local _, _, _, _, vehicleHandle = GetRaycastResult(rayHandle)
+		if(DoesEntityExist(vehicleHandle)) then
+			TaskStartScenarioInPlace(GetPlayerPed(-1), "WORLD_HUMAN_WELDING", 0, true)
+			Citizen.Wait(20000)
+			SetVehicleDoorsLocked(vehicleHandle, 1)
+			ClearPedTasksImmediately(GetPlayerPed(-1))
+			drawNotification(txt[config.lang]["menu_veh_opened_notification"])
+		else
+			drawNotification(txt[config.lang]["no_veh_near_ped"])
+		end
 	end)
 end
 
@@ -316,11 +321,11 @@ function CheckPlate()
 	local entityWorld = GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0, 20.0, 0.0)
 
 	local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, GetPlayerPed(-1), 0)
-	local a, b, c, d, vehicleHandle = GetRaycastResult(rayHandle)
+	local _, _, _, _, vehicleHandle = GetRaycastResult(rayHandle)
 	if(DoesEntityExist(vehicleHandle)) then
 		TriggerServerEvent("police:checkingPlate", GetVehicleNumberPlateText(vehicleHandle))
 	else
-		TriggerEvent('chatMessage', 'SYSTEM', {255, 0, 0}, "No vehicle near you (maybe get closer) !")
+		drawNotification(txt[config.lang]["no_veh_near_ped"])
 	end
 end
 -------------------------------------------------
@@ -329,14 +334,14 @@ end
 
 function OpenMenuPolice(menu)
 	menupolice.lastmenu = menupolice.currentmenu
-	if menu == "Animations" then
-		menupolice.lastmenu = "main"
-	elseif menu == "Citoyen" then
-		menupolice.lastmenu = "main"
-	elseif menu == "Véhicule" then
-		menupolice.lastmenu = "main"
-	elseif menu == "Amendes" then
-		menupolice.lastmenu = "main"
+	if menu == txt[config.lang]["menu_animations_title"] then
+		menupolice.lastmenu = txt[config.lang]["menu_categories_title"]
+	elseif menu == txt[config.lang]["menu_citizens_title"] then
+		menupolice.lastmenu = txt[config.lang]["menu_categories_title"]
+	elseif menu == txt[config.lang]["menu_vehicles_title"] then
+		menupolice.lastmenu = txt[config.lang]["menu_categories_title"]
+	elseif menu == txt[config.lang]["menu_fines_title"] then
+		menupolice.lastmenu = txt[config.lang]["menu_categories_title"]
 	end
 	menupolice.menu.from = 1
 	menupolice.menu.to = 10
@@ -470,9 +475,9 @@ function BackMenuPolice()
 		return
 	end
 	backlock = true
-	if menupolice.currentmenu == "main" then
+	if menupolice.currentmenu == txt[config.lang]["menu_categories_title"] then
 		CloseMenuPolice()
-	elseif menupolice.currentmenu == "Animations" or menupolice.currentmenu == "Citoyen" or menupolice.currentmenu == "Véhicule" or menupolice.currentmenu == "Amendes" then
+	elseif menupolice.currentmenu == txt[config.lang]["menu_animations_title"] or menupolice.currentmenu == txt[config.lang]["menu_citizens_title"] or menupolice.currentmenu == txt[config.lang]["menu_vehicles_title"] or menupolice.currentmenu == txt[config.lang]["menu_fines_title"] then
 		OpenMenuPolice(menupolice.lastmenu)
 	else
 		OpenMenuPolice(menupolice.lastmenu)
@@ -523,7 +528,7 @@ end
 ----------------FONCTION OPEN--------------------
 -------------------------------------------------
 function OpenPoliceMenu()
-	menupolice.currentmenu = "main"
+	menupolice.currentmenu = txt[config.lang]["menu_categories_title"]
 	menupolice.opened = true
 	menupolice.selectedbutton = 0
 end

@@ -1,23 +1,30 @@
 -----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------MENU POLICE--------------------------------------------------
+----------------------------------------------------POLICE MENU--------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
+
 local buttonsCitizen = {}
+
 if(config.useGcIdentity == true) then
 	buttonsCitizen[1] = {name = "Carte d'identité", description = ''}
 end
-if(config.useVDKInventory == true) then
+
+if(config.useVDKInventory == true or config.useWeashop == true) then
 	buttonsCitizen[#buttonsCitizen+1] = {name = "Fouiller", description = ''}
 end
+
 buttonsCitizen[#buttonsCitizen+1] = {name = "(De)Menotter", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Mettre dans le véhicule", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Faire sortir du véhicule", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Escorter le joueur", description = ''}
 buttonsCitizen[#buttonsCitizen+1] = {name = "Amendes", description = ''}
 
+
 local buttonsVehicle = {}
+
 if(config.enableCheckPlate == true) then
 	buttonsVehicle[1] = {name = "Plaque d'immatriculation", description = ''}
 end
+
 buttonsVehicle[#buttonsVehicle+1] = {name = "Crocheter le véhicule", description = ''}
 
 local menupolice = {
@@ -45,8 +52,6 @@ local menupolice = {
 				{name = "Animations", description = ""},
 				{name = "Citoyen", description = ""},
 				{name = "Véhicule", description = ""},
-				{name = "Demande de renforts(SOON)", description = ""},
-				{name = "Radar de vitesse(SOON)", description = ""},
 				{name = "Fermer le Menu", description = ""},
 			}
 		},
@@ -84,16 +89,15 @@ local menupolice = {
 		["Véhicule"] = {
 			title = "INTERACTION VEHICULE",
 			name = "Véhicule",
-			buttons = {
-				{name = "Plaque d'immatriculation", description = ''},
-				{name = "Crocheter le véhicule", description = ''},
-			}
+			buttons = buttonsVehicle
 		},
 	}
 }
+
 -------------------------------------------------
-----------------CONFIG SELECTION----------------
+----------------BUTTONS FUNCTIONS----------------
 -------------------------------------------------
+
 function ButtonSelectedPolice(button)
 	local ped = GetPlayerPed(-1)
 	local this = menupolice.currentmenu
@@ -110,7 +114,7 @@ function ButtonSelectedPolice(button)
 		end
 	elseif this == "Animations" then
 		if btn == "Faire la circulation" then
-			Circulation()
+			DoTraffic()
 		elseif btn == "Prendre des notes" then
 			Note()
 		elseif btn == "Stand By" then
@@ -122,9 +126,9 @@ function ButtonSelectedPolice(button)
 		if btn == "Amendes" then
 			OpenMenuPolice('Amendes')
 		elseif btn == "Fouiller" then
-			Fouiller()
+			CheckInventory()
 		elseif btn == "(De)Menotter" then
-			Cuffed()
+			ToggleCuff()
 		elseif btn == "Mettre dans le véhicule" then
 			PutInVehicle()
 		elseif btn == "Faire sortir du véhicule" then
@@ -136,7 +140,7 @@ function ButtonSelectedPolice(button)
 		end
 	elseif this == "Véhicule" then
 		if btn == "Crocheter le véhicule"then
-			Crocheter()
+			Crochet()
 		elseif btn == "Plaque d'immatriculation" then
 			CheckPlate()
 		end
@@ -164,10 +168,12 @@ function ButtonSelectedPolice(button)
 		end
 	end
 end
+
 -------------------------------------------------
-----------------FONCTION ANIMATIONS---------------
+---------------ANIMATIONS FUNCTIONS--------------
 -------------------------------------------------
-function Circulation()
+
+function DoTraffic()
 	Citizen.CreateThread(function()
         TaskStartScenarioInPlace(GetPlayerPed(-1), "WORLD_HUMAN_CAR_PARK_ATTENDANT", 0, false)
         Citizen.Wait(60000)
@@ -204,9 +210,10 @@ function StandBy2()
 end
 
 -------------------------------------------------
-------------FONCTION INTERACTION CITOYEN---------
+-----------------CITIZENS FUNCTIONS--------------
 -------------------------------------------------
-function Fouiller()
+
+function CheckInventory()
 	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:targetCheckInventory", GetPlayerServerId(t))
@@ -224,7 +231,7 @@ function CheckId()
 	end
 end
 
-function Cuffed()
+function ToggleCuff()
 	local t, distance = GetClosestPlayer()
 	if(distance ~= -1 and distance < 3) then
 		TriggerServerEvent("police:cuffGranted", GetPlayerServerId(t))
@@ -287,9 +294,10 @@ function Fines(amount)
 end
 
 -------------------------------------------------
-------------FONCTION INTERACTION VEHICLE---------
+-----------------VEHICLES FUNCTIONS--------------
 -------------------------------------------------
-function Crocheter()
+
+function Crochet()
 	Citizen.CreateThread(function()
 	local ply = GetPlayerPed(-1)
 	local plyCoords = GetEntityCoords(ply, 0)
@@ -318,6 +326,7 @@ end
 -------------------------------------------------
 ----------------CONFIG OPEN MENU-----------------
 -------------------------------------------------
+
 function OpenMenuPolice(menu)
 	menupolice.lastmenu = menupolice.currentmenu
 	if menu == "Animations" then
@@ -334,6 +343,7 @@ function OpenMenuPolice(menu)
 	menupolice.selectedbutton = 0
 	menupolice.currentmenu = menu
 end
+
 -------------------------------------------------
 ------------------DRAW NOTIFY--------------------
 -------------------------------------------------
@@ -342,17 +352,21 @@ function drawNotification(text)
 	AddTextComponentString(text)
 	DrawNotification(false, false)
 end
+
 --------------------------------------
 -------------DISPLAY HELP TEXT--------
 --------------------------------------
+
 function DisplayHelpText(str)
 	SetTextComponentFormat("STRING")
 	AddTextComponentString(str)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
+
 -------------------------------------------------
 ------------------DRAW TITLE MENU----------------
 -------------------------------------------------
+
 function drawMenuTitle(txt,x,y)
 local menu = menupolice.menu
 	SetTextFont(2)
@@ -364,9 +378,11 @@ local menu = menupolice.menu
 	DrawRect(x,y,menu.width,menu.height,0,0,0,150)
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU BOUTON---------------
 -------------------------------------------------
+
 function drawMenuButton(button,x,y,selected)
 	local menu = menupolice.menu
 	SetTextFont(menu.font)
@@ -387,9 +403,11 @@ function drawMenuButton(button,x,y,selected)
 	end
 	DrawText(x - menu.width/2 + 0.005, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 ------------------DRAW MENU INFO-----------------
 -------------------------------------------------
+
 function drawMenuInfo(text)
 	local menu = menupolice.menu
 	SetTextFont(menu.font)
@@ -402,9 +420,11 @@ function drawMenuInfo(text)
 	DrawRect(0.675, 0.95,0.65,0.050,0,0,0,150)
 	DrawText(0.365, 0.934)
 end
+
 -------------------------------------------------
 ----------------DRAW MENU DROIT------------------
 -------------------------------------------------
+
 function drawMenuRight(txt,x,y,selected)
 	local menu = menupolice.menu
 	SetTextFont(menu.font)
@@ -421,9 +441,11 @@ function drawMenuRight(txt,x,y,selected)
 	AddTextComponentString(txt)
 	DrawText(x + menu.width/2 - 0.03, y - menu.height/2 + 0.0028)
 end
+
 -------------------------------------------------
 -------------------DRAW TEXT---------------------
 -------------------------------------------------
+
 function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	SetTextFont(font)
 	SetTextProportional(0)
@@ -438,9 +460,11 @@ function drawTxt(text,font,centre,x,y,scale,r,g,b,a)
 	AddTextComponentString(text)
 	DrawText(x , y)
 end
+
 -------------------------------------------------
 ----------------CONFIG BACK MENU-----------------
 -------------------------------------------------
+
 function BackMenuPolice()
 	if backlock then
 		return
@@ -454,9 +478,11 @@ function BackMenuPolice()
 		OpenMenuPolice(menupolice.lastmenu)
 	end
 end
+
 -------------------------------------------------
 ---------------------FONCTION--------------------
 -------------------------------------------------
+
 function f(n)
 return n + 0.0001
 end
@@ -492,6 +518,7 @@ end
 function stringstarts(String,Start)
    return string.sub(String,1,string.len(Start))==Start
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN--------------------
 -------------------------------------------------
@@ -500,17 +527,21 @@ function OpenPoliceMenu()
 	menupolice.opened = true
 	menupolice.selectedbutton = 0
 end
+
 -------------------------------------------------
 ----------------FONCTION CLOSE-------------------
 -------------------------------------------------
+
 function CloseMenuPolice()
 		menupolice.opened = false
 		menupolice.menu.from = 1
 		menupolice.menu.to = 10
 end
+
 -------------------------------------------------
 ----------------FONCTION OPEN MENU---------------
 -------------------------------------------------
+
 local backlock = false
 Citizen.CreateThread(function()
 	while true do

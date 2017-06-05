@@ -1,6 +1,6 @@
 local policeveh = {
 	opened = false,
-	title = "Garage de Police",
+	title = txt[config.lang]["garage_global_title"],
 	currentmenu = "main",
 	lastmenu = nil,
 	currentpos = nil,
@@ -17,7 +17,7 @@ local policeveh = {
 		scale = 0.4,
 		font = 0,
 		["main"] = {
-			title = "CATEGORIES",
+			title = txt[config.lang]["menu_categories_title"],
 			name = "main",
 			buttons = {
 				--{name = "Police Stanier", costs = 0, description = {}, model = "police"},
@@ -384,17 +384,19 @@ if(config.useNativePoliceGarage == true) then
 										RequestModel(hash)
 										while not HasModelLoaded(hash) do
 											Citizen.Wait(0)
-											drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
+											drawTxt(txt[config.lang]["garage_loading"],0,1,0.5,0.5,1.5,255,255,255,255)
 
 										end
-										local veh = CreateVehicle(hash,452.115, -1018.106, 28.478,90.0,false,false)
+										local veh = CreateVehicle(hash,452.115, -1018.106, 28.478,90.0,true,false)
 										while not DoesEntityExist(veh) do
 											Citizen.Wait(0)
-											drawTxt("~b~Chargement...",0,1,0.5,0.5,1.5,255,255,255,255)
+											drawTxt(txt[config.lang]["garage_loading"],0,1,0.5,0.5,1.5,255,255,255,255)
 										end
 										FreezeEntityPosition(veh,true)
 										SetEntityInvincible(veh,true)
 										SetVehicleDoorsLocked(veh,4)
+										local netid = NetworkGetNetworkIdFromEntity(veh)
+										SetNetworkIdCanMigrate(netid, true)
 										TaskWarpPedIntoVehicle(LocalPed(),veh,-1)
 										for i = 0,24 do
 											SetVehicleModKit(veh,0)
@@ -457,6 +459,8 @@ AddEventHandler('policeveh:spawnVehicle', function(v)
 		local playerCoords = GetEntityCoords(playerPed)
 
 		veh = CreateVehicle(car, playerCoords, 0.0, true, false)
+		local netid = NetworkGetNetworkIdFromEntity(veh)
+		SetNetworkIdCanMigrate(netid, true)
 		TaskWarpPedIntoVehicle(playerPed, veh, -1)
 		SetEntityInvincible(veh, true)
 	end
